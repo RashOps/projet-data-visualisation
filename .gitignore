@@ -1,0 +1,11 @@
+# Fichiers cache Python
+__pycache__/
+*.pyc
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Environnements virtuels
+venv/
+.venv/
