@@ -200,4 +200,4 @@ st.download_button(
 # Passer à la partie création des graphiques aprés l'analyse 
 st.write("")
 st.write("Passez à la visualisation des graphes avec Seaborn en cliquant sur le bouton ci-dessous.")
-st.link_button("Cliquez-ici ", url="/Partie_1_-_Les_graphiques")
+st.link_button("Cliquez-ici ", url="/Partie_1_-_Les_graphiques_Seaborn")

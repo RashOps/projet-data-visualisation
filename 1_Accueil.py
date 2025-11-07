@@ -57,7 +57,7 @@ with col1 :
 
 # Colone 2
 with col2 :
-    st.link_button("Section 2 : Les graphiques avec Seaborn", url="/Partie_1_-_Les_graphiques")
+    st.link_button("Section 2 : Les graphiques avec Seaborn", url="/Partie_1_-_Les_graphiques_Seaborn")
 
 
 
@@ -90,7 +90,7 @@ col3, col4, col5 = st.columns(3)
 
 # Colone 4
 with col4 :
-    st.link_button("Les graphiques intéractifs avec Plotly", url="/Partie_2_-_Les_graphiques_Plotly")
+    st.link_button("Les graphiques intéractifs avec Plotly", url="/Partie 2 - Harmonisation des datasets")
 
 
 
