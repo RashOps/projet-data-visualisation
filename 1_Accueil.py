@@ -103,4 +103,4 @@ st.markdown("""
     Télécharger mes notebooks sur mon Github.
 """)
 st.image(image="./images/github-white.png", width=100)
-st.link_button("Lien Github", url="", icon="💻")
+st.link_button("Lien Github", url="https://github.com/RashOps/projet-data-visualisation", icon="💻")
