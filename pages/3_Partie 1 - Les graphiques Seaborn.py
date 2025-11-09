@@ -7,7 +7,9 @@ import matplotlib.pyplot as plt
 # Configuration de la page principale
 st.set_page_config(
     page_title="Partie 1 - Les graphiques Seaborn",
-    page_icon="📈"
+    page_icon="📈",
+    layout="centered",
+    initial_sidebar_state = "expanded"
 )
 
 

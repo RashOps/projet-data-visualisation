@@ -6,7 +6,9 @@ import streamlit as st
 # Configuration de la page principale
 st.set_page_config(
     page_title="Partie 2 - Harmonisation des datasets",
-    page_icon="♻️"
+    page_icon="♻️",
+    layout="centered",
+    initial_sidebar_state = "expanded"
 )
 
 

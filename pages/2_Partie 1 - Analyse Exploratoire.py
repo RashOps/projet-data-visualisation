@@ -6,7 +6,9 @@ import numpy as np
 # Configuration de la page principale
 st.set_page_config(
     page_title="Partie 1 - Analyse Exporatoire",
-    page_icon="🔎"
+    page_icon="🔎",
+    layout="centered",
+    initial_sidebar_state = "expanded"
 )
 
 # Titre de la page

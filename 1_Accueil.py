@@ -5,7 +5,9 @@ import streamlit as st
 # Configuration de la page principale
 st.set_page_config(
     page_title="Accueil",
-    page_icon="🏡"
+    page_icon="🏡",
+    layout="centered",
+    initial_sidebar_state = "expanded"
 )
 
 # Structuration de la page d'accueil
@@ -103,4 +105,4 @@ st.markdown("""
     Télécharger mes notebooks sur mon Github.
 """)
 st.image(image="./images/github-white.png", width=100)
-st.link_button("Lien Github", url="https://github.com/RashOps/projet-data-visualisation", icon="💻")
+st.link_button("Lien Github", url="https://github.com/RashOps/projet-data-visualisation", icon="🔗")
