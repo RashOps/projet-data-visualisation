@@ -12,7 +12,8 @@ st.set_page_config(
 )
 
 # Chargement du dataframe
-world_happiness_report = pd.read_csv("./data/world_happiness_2015-2019_combined.csv")
+from data_loader import load_happiness_data_analysis
+world_happiness_report = load_happiness_data_analysis()
 
 # ===========================================================================================
 st.title("Visualisation Plotly et Analyse descriptive")

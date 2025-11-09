@@ -15,7 +15,9 @@ st.set_page_config(
 st.title("Analayse exploratoire et nettoyage du dataset")
 
 # Visualisation du dataset original
-netflix = pd.read_csv('./data/netflix_titles.csv')
+# Chargmenet du dataframe
+from data_loader import load_netflix_data_cleaning
+netflix = load_netflix_data_cleaning()
 st.dataframe(netflix)
 
 # Analyse exploratoire du dataframe

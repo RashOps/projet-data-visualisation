@@ -36,7 +36,10 @@ st.markdown("""
     Qui sera précédé par une analyse descriptive du dataframe nettoyé.
 """)
 
-netflix = pd.read_csv('./data/netflix_cleaned.csv')
+# Chargmenet du dataframe
+from data_loader import load_netflix_data_analysis
+netflix = load_netflix_data_analysis()
+
 st.dataframe(netflix)
 
 # ===========================================================================================================================
