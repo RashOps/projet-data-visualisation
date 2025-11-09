@@ -39,27 +39,28 @@ st.markdown("""
     en vrai date, c'est à dire en ***datetime64*** afin de pourvoir l'exploiter correctement.
 """)
 
-with st.echo():
-    # Imporation des dépendances
-    import pandas as pd
-    
-    # Conversion de 'date_added' (objet) en 'date_added_feature' (datetime)
-    netflix['date_added_feature'] = netflix['date_added'].str.strip() # Elimine les espaces blancs en debut et en fin
-    netflix['date_added_feature'] = pd.to_datetime(netflix['date_added_feature'], errors='coerce') # Permet de forcer la conversion en réelle dat exploitable
+with st.expander("Découvrez le code") : 
+    with st.echo():
+        # Imporation des dépendances
+        import pandas as pd
+        
+        # Conversion de 'date_added' (objet) en 'date_added_feature' (datetime)
+        netflix['date_added_feature'] = netflix['date_added'].str.strip() # Suppression des espaces blancs en debut et en fin
+        netflix['date_added_feature'] = pd.to_datetime(netflix['date_added_feature'], errors='coerce')
 
-    # creation de la colonne 'year_added' a partir de 'date_added_feature' : Extraction de l'année d'ajout 
-    netflix['year_added'] = netflix['date_added_feature'].dt.year
+        # création de la colonne 'year_added' à partir de 'date_added_feature' : Extraction de l'année d'ajout 
+        netflix['year_added'] = netflix['date_added_feature'].dt.year
 
-    # creation de la colonne 'month_added' a partir de 'date_added_feature' : Extraction du mois d'ajout 
-    netflix['month_added'] = netflix['date_added_feature'].dt.month
+        # création de la colonne 'month_added' à partir de 'date_added_feature' : Extraction du mois d'ajout 
+        netflix['month_added'] = netflix['date_added_feature'].dt.month
 
-    # creation de la colonne 'added_day_of_week' a partir de 'date_added_feature' : Extraction du jour d'ajout 
-    netflix['added_day_of_week'] = netflix['date_added_feature'].dt.day
+        # création de la colonne 'added_day_of_week' à partir de 'date_added_feature' : Extraction du jour d'ajout 
+        netflix['added_day_of_week'] = netflix['date_added_feature'].dt.day
 
-    # Creation de la colonne 'lag_time' : qui est la durée entre l'ajout sur netflix et la sortie
-    netflix['lag_time'] = netflix['year_added'] - netflix['release_year']
+        # Création de la colonne 'lag_time' : qui est la durée entre l'ajout sur netflix et la sortie
+        netflix['lag_time'] = netflix['year_added'] - netflix['release_year']
 
-    st.dataframe(netflix.head())
+st.dataframe(netflix.head())
 
 st.markdown("""
     En effectuant ce bloc de script on optient 5 nouvelles colonnes utilisables et comprenables par pandas : \n
@@ -85,26 +86,26 @@ st.markdown("""
     puis les formater correctment, avant de les convertir en valeurs numériques (***float***) afin de les exploiter.
 """)
 
-with st.echo() :
-    # Initialisation des colonnes a remplir
-    netflix['duration_min'] = np.nan # permet de creer un colonne pour la duree des film
-    netflix['duration_seasons'] = np.nan # permet de creer une colonne pour le nombre de saison des series
+with st.expander("Découvrez le code") : 
+    with st.echo() :
+        # Initialisation des colonnes à remplir
+        netflix['duration_min'] = np.nan # permet de créer une colonne pour la durée des film
+        netflix['duration_seasons'] = np.nan # permet de créer une colonne pour le nombre de saison des séries
 
-    # Création des masques servant a departager les films et series
-    mask_films = ((netflix['type']=='Movie') & (netflix['duration'].notna())) # Masque pour les films
-    mask_series = ((netflix['type']=='TV Show') & (netflix['duration'].notna())) # Masque pour les series
+        # Création des masques servant a departager les films et series
+        mask_films = ((netflix['type']=='Movie') & (netflix['duration'].notna())) # Masque pour les films
+        mask_series = ((netflix['type']=='TV Show') & (netflix['duration'].notna())) # Masque pour les séries
 
-    # Application des masques et séparation des films et series
-    # .loc[masque_films, 'colonne_à_remplir'] = ...
-    # Durée des films
-    netflix.loc[mask_films, 'duration_min'] = netflix.loc[mask_films, 'duration'] # Application du masque film sur la colonne et extraction de la duree des film
-    netflix['duration_min'] = netflix['duration_min'].str.replace(' min', '').astype(float) # Conversion de la duree qui en 'str' en 'float'
+        # Application des masques et séparation des films et series
+        # Durée des films
+        netflix.loc[mask_films, 'duration_min'] = netflix.loc[mask_films, 'duration'] # Application du masque film sur la colonne et extraction de la duree des film
+        netflix['duration_min'] = netflix['duration_min'].str.replace(' min', '').astype(float) # Conversion de la duree qui en 'str' en 'float'
 
-    # Durée des séries
-    netflix.loc[mask_series, 'duration_seasons'] = netflix.loc[mask_series, 'duration'] # Application du masque series sur la colonne et extraction de la duree des series
-    netflix['duration_seasons'] = netflix['duration_seasons'].str.replace(' Seasons', '').str.replace(' Season', '').astype(float) # Conversion de la duree qui en 'str' en 'float'
+        # Durée des séries
+        netflix.loc[mask_series, 'duration_seasons'] = netflix.loc[mask_series, 'duration'] # Application du masque series sur la colonne et extraction de la duree des series
+        netflix['duration_seasons'] = netflix['duration_seasons'].str.replace(' Seasons', '').str.replace(' Season', '').astype(float) # Conversion de la duree qui en 'str' en 'float'
 
-    st.dataframe(netflix.head())
+st.dataframe(netflix.head())
 
 st.markdown("""
     à l'aide du script précedent on obtient 2 nouvelles colonnes utilisables et comprenables par pandas : \n
@@ -123,22 +124,15 @@ st.markdown("""
     en partant du principe que le premier élément de chaque case est l'élément principal. 
 """)
 
-with st.echo() :
-    # Extraction de la categorie principal et pays de chaque film et series
+with st.expander("Découvrez le code") :  
+    with st.echo() :
+        # Pour les pays 
+        netflix['main_country'] = netflix['country'].str.split(',').str[0]
 
-    # En partant du principe que le premier pays listé est le pays principal
-    # Pareil pour la catégorie, en partant du principe que la première catégorie de la liste est la catégorie principal
+        # Pour les catégories
+        netflix['main_genre'] = netflix['listed_in'].str.split(',').str[0]
 
-
-    # Pour les pays
-    # .str.split(',') : Coupe la chaîne à chaque virgule (renvoie une liste)
-    # .str[0]         : Sélectionne le premier élément de cette liste
-    netflix['main_country'] = netflix['country'].str.split(',').str[0]
-
-    # Pour les catégories
-    netflix['main_genre'] = netflix['listed_in'].str.split(',').str[0]
-
-    st.dataframe(netflix.head())
+st.dataframe(netflix.head())
 
 st.markdown("""
     Ce script précedent nous permet d'obtenir 2 nouvelles colonnes utilisables et comprenables par pandas : \n
@@ -157,27 +151,29 @@ st.markdown("""
     Et les sauvegarder comme une nouveux dataset.
 """)
 
-with st.echo() :
-    # Ma liste de colonnes final
-    columns_final = [
-        'show_id', 
-        'type', 
-        'title', 
-        'main_country', 
-        'main_genre', 
-        'release_year', 
-        'date_added_feature',
-        'year_added', 
-        'month_added', 
-        'added_day_of_week', 
-        'lag_time', 
-        'duration_min', 
-        'duration_seasons'
-    ]
+with st.expander("Découvrez le code") : 
+    with st.echo() :
+        # Ma liste de colonnes final
+        columns_final = [
+            'show_id', 
+            'type', 
+            'title', 
+            'main_country', 
+            'main_genre', 
+            'release_year', 
+            'date_added_feature',
+            'year_added', 
+            'month_added', 
+            'added_day_of_week', 
+            'lag_time', 
+            'duration_min', 
+            'duration_seasons'
+        ]
 
-    # Nouveau dataframe :
-    netflix_cleaned = netflix[columns_final].copy()
-    st.dataframe(netflix_cleaned.head())
+        # Nouveau dataframe :
+        netflix_cleaned = netflix[columns_final].copy()
+
+st.dataframe(netflix_cleaned.head())
 
 st.write("""
     Ainsi notre travail de data cleaning prend, et vu la configuaration de notre nouveau dataframe,

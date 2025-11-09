@@ -52,22 +52,24 @@ st.markdown("""
     - La répartition par genres les plus représentés
 """)
 
-with st.echo() :
-    # Analyse descriptive - Partie 1 : Nombre de film VS Serie
-    nbre_production_total = netflix['show_id'].count() # Determination du nombre total de production (films + Series)
-    nbre_production_par_type = netflix.groupby('type').count()['show_id']
+with st.expander("Découvrez le code") : 
+    with st.echo() :
+        # Analyse descriptive - Partie 1 : Nombre de film VS Serie
+        nbre_production_total = netflix['show_id'].count() # Détermination du nombre total de production (films + Series)
+        nbre_production_par_type = netflix.groupby('type').count()['show_id']
 
-    # Repartition des productions par pays (Suite)
-    repartition_prod_pay = netflix.groupby('main_country').count()['show_id'].reset_index()
-    repartition_prod_pay_sorted = repartition_prod_pay.sort_values(by=['show_id'], ascending=False)
+        # Répartition des productions par pays (Suite)
+        repartition_prod_pay = netflix.groupby('main_country').count()['show_id'].reset_index()
+        repartition_prod_pay_sorted = repartition_prod_pay.sort_values(by=['show_id'], ascending=False)
 
-    # Nombres Séries VS Films
-    text = f"On observe ainsi : **{nbre_production_par_type['Movie']} films** et **{nbre_production_par_type['TV Show']} series**, sur **{nbre_production_total} productions totales**."
-    st.info(text, icon="✨")
 
-    # Analyse descriptive - Partie 2 : Repartition des productions par annee de production
-    repartition_prod_year = netflix.groupby(['release_year']).count()['show_id'].reset_index()
-    repartition_prod_year_sorted = repartition_prod_year.sort_values(by=['show_id'], ascending=False)
+        # Analyse descriptive - Partie 2 : Répartition des productions par année de production
+        repartition_prod_year = netflix.groupby(['release_year']).count()['show_id'].reset_index()
+        repartition_prod_year_sorted = repartition_prod_year.sort_values(by=['show_id'], ascending=False)
+
+# Nombres Séries VS Films
+text = f"On observe ainsi : **{nbre_production_par_type['Movie']} films** et **{nbre_production_par_type['TV Show']} series**, sur **{nbre_production_total} productions totales**."
+st.info(text, icon="✨")
 
 # Création des colonnes
 col1, col2 = st.columns(2)
@@ -108,10 +110,11 @@ st.markdown("""
 # Repartition du contenu par genre =================================
 st.markdown("#### Répartition du contenus par genre")
 
-with st.echo() :
-    # Analyse descriptive - Partie 3 : Repartition des productions par genre
-    repartition_prod_genre = netflix.groupby(['main_genre']).count()['show_id'].reset_index()
-    repartition_prod_genre_sorted = repartition_prod_genre.sort_values(by=['show_id'], ascending=False)
+with st.expander("Découvrez le code") : 
+    with st.echo() :
+        # Analyse descriptive - Partie 3 : Répartition des productions par genre
+        repartition_prod_genre = netflix.groupby(['main_genre']).count()['show_id'].reset_index()
+        repartition_prod_genre_sorted = repartition_prod_genre.sort_values(by=['show_id'], ascending=False)
 
 nb_genre = st.number_input("Entrez un nombre pour voir la liste de la repartition de contenu par genre.", min_value=5, max_value=99)
 
@@ -204,28 +207,30 @@ sns.set_theme(
 # Premier graphe : countplot() ======================================================
 st.divider()
 st.subheader("Gaphe 1 : Comparaison films VS séries avec un countplot")
-with st.echo() : 
-    #fig, ax = plt.figure(figsize=(8, 6)) # Définir la taille
-    fig, ax = plt.subplots()
 
-    sns.countplot(
-        netflix,
-        x='type',
-        palette=binary_palette,
-        width=0.75,
-        ax=ax
-    )
+with st.expander("Découvrez le code") : 
+    with st.echo() : 
+        fig, ax = plt.subplots()
 
-    # --- Personnalisation ---
-    ax.set_title('Distribution des Types de Contenu')
-    ax.set_xlabel('Type de Contenu')
-    ax.set_ylabel('Nombre total')
+        sns.countplot(
+            netflix,
+            x='type',
+            palette=binary_palette,
+            width=0.75,
+            ax=ax
+        )
 
-    # Bonus : Ajouter les étiquettes de valeur au-dessus des barres
-    ax.bar_label(ax.containers[0], fontsize=12, color=DARK_GREY)
-    ax.bar_label(ax.containers[1], fontsize=12, color=DARK_GREY)
+        # Personnalisation
+        ax.set_title('Distribution des Types de Contenu')
+        ax.set_xlabel('Type de Contenu')
+        ax.set_ylabel('Nombre total')
 
-    st.pyplot(fig)
+        # Ajout des étiquettes de valeur au-dessus des barres
+        ax.bar_label(ax.containers[0], fontsize=12, color=DARK_GREY)
+        ax.bar_label(ax.containers[1], fontsize=12, color=DARK_GREY)
+
+# Affichage du graphe
+st.pyplot(fig)
 
 st.markdown("""
     Commme vu précédemment lors de l'analyse descriptive, le diagramme `countplot` nous donne les mêmes resultats du nombres de films et de séries.
@@ -244,29 +249,30 @@ st.write("")
 st.subheader("Gaphe 2 : Top 10 des pays producteurs avec barplot")
 
 nb_top10_countries = st.number_input("Entrez un nombre pour modifier le graphe", min_value=5, value=10, max_value=15)
-with st.echo() :
-    # Création d'un barplot
-    # Préparation des données (Top 10)
-    top_10_countries = netflix['main_country'].value_counts().head(nb_top10_countries).reset_index()
-    top_10_countries.columns = ['country', 'count']
 
-    fig, ax = plt.subplots()
-    sns.barplot(
-        data=top_10_countries,
-        x='count',
-        y='country',
-        color=NETFLIX_RED,  # <- Couleur unique de la charte
-        saturation=0.9,     # Un peu moins "flashy"
-        ax=ax
-    )
+with st.expander("Découvrez le code") : 
+    with st.echo() :
+        # Préparation des données (Top 10)
+        top_10_countries = netflix['main_country'].value_counts().head(nb_top10_countries).reset_index()
+        top_10_countries.columns = ['country', 'count']
 
-    # --- Personnalisation ---
-    ax.set_title('Top 10 des Pays Producteurs')
-    ax.set_xlabel('Nombre de Titres')
-    ax.set_ylabel('Pays')
+        fig, ax = plt.subplots()
+        sns.barplot(
+            data=top_10_countries,
+            x='count',
+            y='country',
+            color=NETFLIX_RED,  
+            saturation=0.9,     
+            ax=ax
+        )
 
-    # Cacher les bordures
-    sns.despine(left=True, bottom=True) 
+        # Personnalisation 
+        ax.set_title('Top 10 des Pays Producteurs')
+        ax.set_xlabel('Nombre de Titres')
+        ax.set_ylabel('Pays')
+
+        # Cacher les bordures
+        sns.despine(left=True, bottom=True) 
 
 # Affichage du graphique
 st.pyplot(fig)
@@ -289,26 +295,30 @@ st.write("")
 st.subheader("Gaphe 3 : Distribution des productions en fonctions des années de sortie avec un histplot")
 
 nb_bins = st.number_input("Faites varier le nombre de bins", min_value=20, value=50, max_value=100)
-with st.echo() :
-    fig, ax = plt.subplots()
 
-    sns.histplot(
-        data=netflix,
-        x='release_year',
-        bins=nb_bins,               
-        color=NETFLIX_RED,       
-        kde=True,              
-        line_kws={             # Personnalisation de la ligne KDE
-            'color': DARK_GREY,
-            'linewidth': 3}, 
-        ax=ax)
+with st.expander("Découvrez le code") : 
+    with st.echo() :
+        fig, ax = plt.subplots()
 
-    # --- Personnalisation ---
+        sns.histplot(
+            data=netflix,
+            x='release_year',
+            bins=nb_bins,               
+            color=NETFLIX_RED,       
+            kde=True,              
+            line_kws={             
+                # Personnalisation de la ligne KDE
+                'color': DARK_GREY,
+                'linewidth': 3}, 
+            ax=ax)
+
+    # Personnalisation
     ax.set_title('Distribution des Années de Sortie du Contenu')
     ax.set_xlabel('Année de Sortie')
     ax.set_ylabel('Fréquence')
 
-    st.pyplot(fig)
+# Affichage du graphe
+st.pyplot(fig)
 
 st.markdown("""
 L'histogramme `histplot` montre la distribution des contenus Netflix en fonction de leur année de sortie.
@@ -335,29 +345,33 @@ st.write("")
 st.write("")
 st.subheader("Gaphe 4 : Matrice de corrélation avec un heatmap")
 
-with st.echo() :
-    fig, ax = plt.subplots()
+with st.expander("Découvrez le code") : 
+    with st.echo() :
+        fig, ax = plt.subplots()
 
-    numeric_cols = ['release_year', 'year_added', 'month_added', 'lag_time', 'duration_min', 'duration_seasons']
-    corr_matrix = netflix[numeric_cols].corr()
+        numeric_cols = ['release_year', 'year_added', 'month_added', 'lag_time', 'duration_min', 'duration_seasons']
+        corr_matrix = netflix[numeric_cols].corr()
 
-    sns.heatmap(
-        corr_matrix,
-        annot=True,          
-        fmt=".2f",           # Formatage à 2 décimales
-        cmap=heatmap_cmap,   
-        linewidths=0.5,      # Lignes fines entre les carrés
-        cbar_kws={           # Personnalisation de la barre de couleur
-            "label": "Coefficient de Corrélation"
-        })
+        sns.heatmap(
+            corr_matrix,
+            annot=True,          
+            fmt=".2f",           # Formatage à 2 décimales
+            cmap=heatmap_cmap,   
+            linewidths=0.5,      
+            cbar_kws={           
+                # Personnalisation de la barre de couleur
+                "label": "Coefficient de Corrélation"
+            })
 
-    # --- Personnalisation ---
-    ax.set_title('Matrice de Corrélation')
-    # Faire pivoter les étiquettes pour la lisibilité
-    plt.xticks(rotation=45) 
-    plt.yticks(rotation=0)
+        # Personnalisation
+        ax.set_title('Matrice de Corrélation')
 
-    st.pyplot(fig)
+        # Faire pivoter les étiquettes pour la lisibilité
+        plt.xticks(rotation=90) 
+        plt.yticks(rotation=0)
+
+# Affichage du graphe
+st.pyplot(fig)
 
 st.markdown("""
     Cette matrice de corrélation `heatmap` nous permet de quantifier les relations linéaires entre les différentes variables numériques de notre dataset.
@@ -388,41 +402,42 @@ st.write("")
 st.write("")
 st.subheader("Gaphe 5 : Durée moyenne selon le type de contenu  avec un boxplot")
 
-with st.echo() :
-    fig1, ax1 = plt.subplots()
+with st.expander("Découvrez le code") : 
+    with st.echo() :
 
-    # Graphique 1 : Durée des films
-    sns.boxplot(
-        data=netflix[netflix['type'] == 'Movie'], # Ne filtrer que les films
-        x='duration_min',
-        color=NETFLIX_RED, # Couleur unique pour les films
-        ax=ax1)
-    # --- Personnalisation ---
-    ax1.set_title('Distribution de la Durée des Films (en minutes)')
-    ax1.set_xlabel('Durée (minutes)')
-    plt.show()
+        # Graphique 1 : Durée des films
+        fig1, ax1 = plt.subplots()
+        sns.boxplot(
+            data=netflix[netflix['type'] == 'Movie'],
+            x='duration_min',
+            color=NETFLIX_RED,
+            ax=ax1)
+        
+        # Personnalisation 
+        ax1.set_title('Distribution de la Durée des Films (en minutes)')
+        ax1.set_xlabel('Durée (minutes)')
+        plt.show()
 
 
-    fig2, ax2 = plt.subplots()
-    # Graphique 2 : Nombre de Saisons des Séries
-    # (On filtre les NaN et on utilise l'autre couleur)
-    sns.boxplot(
-        data=netflix[netflix['type'] == 'TV Show'].dropna(subset=['duration_seasons']),
-        x='duration_seasons',
-        color=DARK_GREY, # Couleur unique pour les séries
-        ax=ax2)
-    # --- Personnalisation ---
-    ax2.set_title('Distribution du Nombre de Saisons (Séries TV)')
-    ax2.set_xlabel('Nombre de Saisons')
+        # Graphique 2 : Nombre de Saisons des Séries
+        fig2, ax2 = plt.subplots()
+        sns.boxplot(
+            data=netflix[netflix['type'] == 'TV Show'].dropna(subset=['duration_seasons']),
+            x='duration_seasons',
+            color=DARK_GREY, # Couleur unique pour les séries
+            ax=ax2)
+        # Personnalisation 
+        ax2.set_title('Distribution du Nombre de Saisons (Séries TV)')
+        ax2.set_xlabel('Nombre de Saisons')
 
 col3, col4 = st.columns(2)
 
 # Affichage de nos boxplots
 with col3 :
-    # Durée des films
+    # Affichage graphe de la Durée des films
     st.pyplot(fig1)
 with col4 : 
-    # Durée des séries
+    # A ffichage graphe de la Durée des séries
     st.pyplot(fig2)
 
 st.markdown("""
@@ -481,11 +496,11 @@ st.markdown("""
     global.
 """)
 
-with st.echo() : 
-    # Question 1 : Domination géographique
-    nbr_total_production = netflix['show_id'].count()
-    repartition_prod_pay_sorted['contribution_pays_%'] = repartition_prod_pay_sorted['show_id'] * 100 / nbr_total_production
-    print("Les principaux pays producteurs sont : United States, India et United Kingdom")
+with st.expander("Découvrez le code") : 
+    with st.echo() : 
+        # Domination géographique
+        nbr_total_production = netflix['show_id'].count()
+        repartition_prod_pay_sorted['contribution_pays_%'] = repartition_prod_pay_sorted['show_id'] * 100 / nbr_total_production
     
 nb_repartition_prod = st.number_input("Decouvrez la contribution d'autres pays", min_value=5, value=10, max_value=99)   
 st.dataframe(repartition_prod_pay_sorted.head(nb_repartition_prod))
