@@ -88,11 +88,14 @@ st.markdown(
 """)
 
 # Création des colones
-col3, col4, col5 = st.columns(3)
+col3, col4= st.columns(2)
 
-# Colone 4
+# Les colonnes
+with col3 :
+    st.link_button("Section 1 : Harmonisation des datasets", url="/Partie_2_-_Harmonisation_des_datasets")
+
 with col4 :
-    st.link_button("Les graphiques intéractifs avec Plotly", url="/Partie 2 - Harmonisation des datasets")
+    st.link_button("Section 2 : Les graphiques intéractifs avec Plotly", url="/Partie_2_-_Visualisation_avec_Plotly")
 
 
 
