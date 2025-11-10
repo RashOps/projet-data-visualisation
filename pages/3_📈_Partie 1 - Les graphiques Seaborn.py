@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state = "expanded"
 )
 
-
+st.sidebar.write("Visualisation des graphiques Seaborn 📈")
 
 # ===========================================================================================================================
 st.title("Création des graphiques avec Seaborn")

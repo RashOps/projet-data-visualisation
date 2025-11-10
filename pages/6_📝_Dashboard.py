@@ -13,6 +13,8 @@ st.set_page_config(
     initial_sidebar_state = "expanded"
 )
 
+st.sidebar.write("Dashboard 📝")
+
 # Netflix dataset ======================================================================================================
 # Chargement du dataframe
 from data_loader import load_netflix_data_analysis

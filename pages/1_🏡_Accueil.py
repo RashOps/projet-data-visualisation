@@ -10,6 +10,8 @@ st.set_page_config(
     initial_sidebar_state = "expanded"
 )
 
+st.sidebar.write("Accueil 🏡")
+
 # Structuration de la page d'accueil
 st.title("Projet Data visualisation")
 st.image(image="./images/projet-data.jpg", width=700)
