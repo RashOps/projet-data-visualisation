@@ -440,7 +440,7 @@ with col3 :
     # Affichage graphe de la Durée des films
     st.pyplot(fig1)
 with col4 : 
-    # A ffichage graphe de la Durée des séries
+    # Affichage graphe de la Durée des séries
     st.pyplot(fig2)
 
 st.markdown("""
