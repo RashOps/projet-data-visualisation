@@ -1,5 +1,7 @@
 import streamlit as st
 
+st.logo(image="./images/logo_pstb.png", size="large", icon_image="./images/logo_pstb.png")
+
 # Menu de navigation : Barre latérale
 
 page_accueil = st.Page("./pages/1_🏡_Accueil.py", 
