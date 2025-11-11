@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state = "expanded"
 )
 
-st.sidebar.write("Accueil 🏡")
+st.sidebar.subheader("Accueil 🏡")
 
 # Structuration de la page d'accueil
 st.title("Projet Data visualisation")
@@ -62,8 +62,6 @@ with col1 :
 # Colone 2
 with col2 :
     st.link_button("Section 2 : Les graphiques avec Seaborn", url="/Partie_1_-_Les_graphiques_Seaborn")
-
-
 
 st.write("")
 st.write("")

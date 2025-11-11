@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state = "expanded"
 )
 
-st.sidebar.write("Analyse Exporatoire & Cleaning 🔎")
+st.sidebar.subheader("Analyse Exporatoire & Cleaning 🔎")
 
 # Titre de la page
 st.title("Analayse exploratoire et nettoyage du dataset")

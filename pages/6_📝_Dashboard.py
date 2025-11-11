@@ -17,7 +17,7 @@ st.set_page_config(
 )
     
 st.title("Dashboard")
-st.sidebar.write("Dashboard 📝")
+st.sidebar.subheader("Dashboard 📝")
 
 # Choix du dataset
 list_dataset = ["Netflix", "World Happiness Report"]

@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state = "expanded"
 )
 
-st.sidebar.write("Harmonisation des différents datasets (2015 - 2019) ♻️")
+st.sidebar.subheader("Harmonisation des différents datasets (2015 - 2019) ♻️")
 
 # ===========================================================================================================================
 st.title("Harmonisation des datasets : World Happiness Report")

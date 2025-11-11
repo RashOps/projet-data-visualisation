@@ -155,7 +155,8 @@ def render_netflix_dashboard(netflix_df):
     interactif_graph_col = st.columns(2, gap="medium", vertical_alignment="center", width=1300)
     # Graphe 4 : Diagramme en barre ============================
     # Préparation des données (Top 10)
-    st.sidebar.write("Top des poys producteurs")
+    st.sidebar.write("")
+    st.sidebar.subheader("Top des poys producteurs")
     nb_top10_countries = st.sidebar.number_input("Modifiez le nombre de pays", min_value=5, value=10, max_value=15)
     top_10_countries = netflix_df['main_country'].value_counts().head(nb_top10_countries).reset_index()
     top_10_countries.columns = ['country', 'count']
@@ -171,7 +172,7 @@ def render_netflix_dashboard(netflix_df):
     )
 
     # Personnalisation 
-    ax.set_title('Top 10 des Pays Producteurs')
+    ax.set_title(f'Top {nb_top10_countries} des Pays Producteurs')
     ax.set_xlabel('Nombre de Titres')
     ax.set_ylabel('Pays')
 
@@ -184,7 +185,7 @@ def render_netflix_dashboard(netflix_df):
 
     # Graphe 5 : Histogramme ==================================
     st.sidebar.write("")
-    st.sidebar.write("Distribution des sorties / Ajouts des productions")
+    st.sidebar.subheader("Distribution des sorties / Ajouts des productions")
     hist_col = st.columns(2, gap="medium", vertical_alignment="center", width=1300)
 
     # Widget 1
@@ -207,8 +208,13 @@ def render_netflix_dashboard(netflix_df):
         ax=ax)
 
     # Personnalisation
-    ax.set_title('Distribution des Années de Sortie du Contenu')
-    ax.set_xlabel('Année de Sortie')
+    if year_selection == "release_year" :
+        ax.set_title('Distribution des années de sortie du contenu')
+        ax.set_xlabel('Année de sortie')
+    else :
+        ax.set_title("Distribution des Années d'ajout du contenu")
+        ax.set_xlabel('Année d\'ajout')
+
     ax.set_ylabel('Fréquence')
 
     with interactif_graph_col[1] :
