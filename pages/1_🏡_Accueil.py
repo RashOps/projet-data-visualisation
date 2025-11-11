@@ -98,6 +98,18 @@ with col4 :
     st.link_button("Section 2 : Les graphiques intéractifs avec Plotly", url="/Partie_2_-_Visualisation_avec_Plotly")
 
 
+st.write("")
+st.write("")
+st.divider()
+# Le dashboard
+st.subheader("Dashboard")
+st.write("Passez directement à l'analyse rapide sur dashboard en cliquant sur le bouton ci-dessous.")
+
+dashboard_col = st.columns(3)
+
+with dashboard_col[0] :
+    st.link_button("Dashboard", url="/Dashboard", icon="📌")
+
 
 st.write("")
 st.write("")
