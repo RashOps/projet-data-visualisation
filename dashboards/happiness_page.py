@@ -4,74 +4,51 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import  seaborn as sns
 import plotly.express as px
+from utils.chart_styles import get_happiness_layout
 
 def render_happiness_dashboard(world_happiness_df) :
     st.write("Dashboard World Happiness Report")
+
+    # ===========================================================
+    # Les KPI
+    st.divider()
+    st.sidebar.subheader("Explorez les KPIs")
+
+    list_year_kpi = world_happiness_df["Year"].unique()
+
+    selected_type = st.sidebar.selectbox("Années", list_year_kpi)
+    if selected_type == 2015 or selected_type == 2016 or selected_type == 2017 or selected_type == 2018 or selected_type == 2019 :
+        df_filtered = world_happiness_df[world_happiness_df['Year'] == selected_type]
+
+    # Section KPIs
+    st.subheader("Indicateurs Clés")
+    avg_score = round(df_filtered['Score'].mean(), 2)
+    avg_gdp = round(df_filtered['GDP_per_Capita'].mean(), 2)
+    avg_health = round(df_filtered['Health_Life_Expectancy'].mean(), 2)
+    country_count = df_filtered['Country'].nunique()
+
+    # Affichage avec st.columns
+    kpi_col1, kpi_col2, kpi_col3, kpi_col4 = st.columns(4, border=True)
+
+    with kpi_col1 : 
+        st.metric("Score de Bonheur (Moy.)", avg_score)
+    with kpi_col2: 
+        st.metric("PIB par Hab. (Moy.)", avg_gdp)
+    with kpi_col3 : 
+        st.metric("Espérance de Vie (Moy.)", avg_health)
+    with kpi_col4 : 
+        st.metric("Nombre de Pays", country_count)
+
+    st.divider()
+
     # ===========================================================================================
     # DÉFINITION DE LA CHARTE GRAPHIQUE PLOTLY
-
-    # 1. Palettes de couleurs
-    CONTINUOUS_PALETTE = 'Viridis' # Pour les scores (PIB, Bonheur...)
-    CATEGORICAL_PALETTE = 'Safe' # Pour les catégories (Régions...)
-
-    # 2. Template de Layout
-    GLOBAL_TEMPLATE_LAYOUT = dict(
-        # Le thème de base (fond blanc, grilles légères)
-        template='plotly_white', 
-        
-        # Définition des polices
-        font=dict(
-            family="Arial, sans-serif",
-            size=12,
-            color="#333333" # Gris très foncé, plus doux que le noir
-        ),
-        
-        # Titre principal
-        title=dict(
-            font=dict(size=20, weight="bold"),
-            x=0.5, # Centrer le titre
-            xanchor='center'
-        ),
-        
-        # Axes X et Y
-        xaxis=dict(
-            title_font=dict(size=14, weight="bold"),
-            tickfont=dict(size=12),
-            gridcolor='#EAEAEA', # Grille très claire
-            zerolinecolor='#DDDDDD' # Ligne du zéro
-        ),
-        yaxis=dict(
-            title_font=dict(size=14, weight="bold"),
-            tickfont=dict(size=12),
-            gridcolor='#EAEAEA',
-        ),
-        
-        # Légende (pour les catégories)
-        legend=dict(
-            orientation='h', # Légende horizontale
-            yanchor='bottom',
-            y=1.02, # Placée juste au-dessus du graphique
-            xanchor='right',
-            x=1,
-            title_text='' # Cacher le titre de la légende (souvent redondant)
-        ),
-        
-        # Interactivité (la partie la plus importante)
-        hovermode='closest', # Montre l'infobulle de l'élément le plus proche
-        
-        # Style de l'infobulle (hover)
-        hoverlabel=dict(
-            bgcolor="black",
-            font_size=12,
-            font_family="Arial, sans-serif"
-        )
-    )
+    CONTINUOUS_PALETTE, CATEGORICAL_PALETTE, GLOBAL_TEMPLATE_LAYOUT = get_happiness_layout()
 
     # ===================================================================================
     # World Happiness Report Graphes =====================================================
 
     # Graphe 1 : Carte mondiale
-
     # Widget 1 ==================================
     st.sidebar.subheader("Carte mondiale")
     st.sidebar.write("Filtre Année")
@@ -88,7 +65,6 @@ def render_happiness_dashboard(world_happiness_df) :
     # Widget 2 =========
     map_list = ["Score", "GDP_per_Capita", "Social_Support", "Health_Life_Expectancy", "Freedom", "Trust_Government_Corruption", "Generosity"]
     select_box_variable = st.sidebar.selectbox("Choisissez une variable", map_list)
-
 
     st.subheader("Graphes Intéractifs")
 

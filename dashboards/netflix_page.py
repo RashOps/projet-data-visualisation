@@ -4,53 +4,44 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import  seaborn as sns
 import plotly.express as px
+from utils.chart_styles import setup_netflix_theme
 
 def render_netflix_dashboard(netflix_df):
     st.header("Dashboard Netflix")
 
+    # ===========================================================
+    # Les KPI
+    st.divider()
+    st.sidebar.subheader("Explorez les KPIs")
+    selected_type = st.sidebar.selectbox("Type de productions", ["Tous", "Movie", "TV Show"])
+    if selected_type != "Tous":
+        df_filtered = netflix_df[netflix_df['type'] == selected_type]
+    else:
+        df_filtered = netflix_df
+
+    # Section KPIs
+    st.subheader("Indicateurs Clés")
+
+    # Calculs
+    total_titles = df_filtered.shape[0]
+    avg_lag_time = int(df_filtered['lag_time'].mean())
+    most_prod_country = df_filtered['main_country'].mode()[0]
+
+    kpi_col1, kpi_col2, kpi_col3 = st.columns(3, border=True)
+
+    with kpi_col1 :
+        st.metric("Nombre total de titres", total_titles)
+    with kpi_col2 : 
+        st.metric("Délai moyen d'ajout (jours)", f"{avg_lag_time} j")
+    with kpi_col3 :
+        st.metric("Top Pays Producteur", most_prod_country)
+
+    st.divider()
+
     # =============================================================================
     # --- CHARTE GRAPHIQUE ---
-
-    # 1. Définir les couleurs
-    # Palette de couleurs
-    NETFLIX_RED = "#E50914"
-    NETFLIX_BLACK = "#221f1f"
-    LIGHT_GREY = "#B3B3B3"
-    DARK_GREY = "#4D4D4D"
-
-    # Palette pour les graphiques simples (ex: top 10)
-    # Un dégradé de gris vers le rouge
-    main_palette = sns.color_palette([LIGHT_GREY, DARK_GREY, NETFLIX_BLACK, NETFLIX_RED])
-
-    # Palette pour les graphiques binaires (Movie vs TV Show)
-    binary_palette = {
-        "Movie": NETFLIX_RED,
-        "TV Show": DARK_GREY
-    }
-
-    # Palette pour les heatmaps (de blanc vers rouge)
-    heatmap_cmap = sns.light_palette(NETFLIX_RED, as_cmap=True)
-
-    # 2. Définir le style global (Polices et Fond)
-    sns.set_theme(
-        style="whitegrid",  # Fond blanc avec des grilles légères
-        font="Arial",       # Police propre et lisible (si installée, sinon "sans-serif")
-        rc={
-            # Police et couleur pour les titres
-            "axes.titlecolor": NETFLIX_BLACK,
-            "axes.titlesize": 18,
-            "axes.titleweight": "bold",
-            
-            # Police et couleur pour les étiquettes (axes x/y)
-            "axes.labelcolor": DARK_GREY,
-            "axes.labelsize": 14,
-            "axes.labelweight": "bold",
-            
-            # Police et couleur pour les "ticks" (valeurs sur les axes)
-            "xtick.color": DARK_GREY,
-            "ytick.color": DARK_GREY,
-        }
-    )
+    main_palette, binary_palette, heatmap_cmap, LIGHT_GREY, DARK_GREY, NETFLIX_BLACK, NETFLIX_RED = setup_netflix_theme()
+    
     # ===================================================================================
     # Netflix dataset ===================================================================
 
@@ -156,7 +147,7 @@ def render_netflix_dashboard(netflix_df):
     # Graphe 4 : Diagramme en barre ============================
     # Préparation des données (Top 10)
     st.sidebar.write("")
-    st.sidebar.subheader("Top des poys producteurs")
+    st.sidebar.subheader("Top des pays producteurs")
     nb_top10_countries = st.sidebar.number_input("Modifiez le nombre de pays", min_value=5, value=10, max_value=15)
     top_10_countries = netflix_df['main_country'].value_counts().head(nb_top10_countries).reset_index()
     top_10_countries.columns = ['country', 'count']
