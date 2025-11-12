@@ -86,6 +86,24 @@ def render_netflix_dashboard(netflix_df):
     with graph_stat_col[0] :
         # Affichage du graphe
         st.pyplot(fig_countplot)
+        with st.expander("🔍 Lire l'analyse") :
+            st.markdown("""
+                ### 📈 Analyse : Répartition Films vs. Séries
+
+                **1. Le Constat (Ce que le graphique montre)**
+
+                Le `countplot` affiche une **nette asymétrie** dans le catalogue : il y a significativement **plus de Films (Movies) que de Séries (TV Shows)**.
+
+                **2. L'Analyse (Pourquoi ?)**
+
+                Cette distribution n'est pas un hasard, elle est le reflet direct de la stratégie commerciale de Netflix à travers le temps :
+
+                * **Stratégie de la "Longue Traîne" :** Pour construire un catalogue massif et attirer les premiers abonnés, il était plus rapide et économique d'acquérir les droits de licence d'un très grand nombre de **films existants**.
+                * **Coût et Engagement :** Un film est un investissement ponctuel. Une série, en revanche, est un **engagement à long terme** (multiples saisons, coûts de production/licence récurrents).
+                * **Modèles d'Usage :** Les films comblent un besoin (une soirée de 2h), tandis que les séries (les "Originals" en particulier) sont l'outil principal de **rétention** et de "binge-watching" qui crée le buzz.
+
+                **Conclusion :** Le catalogue de Netflix est un équilibre. Il est composé d'une large base de films (le volume pour satisfaire tous les goûts) complétée par des séries à gros budget (la rétention pour fidéliser).
+            """)
 
 
     # Graphe 2 : Heatmap ===================
@@ -122,7 +140,30 @@ def render_netflix_dashboard(netflix_df):
     with graph_stat_col[1] :
         # Affichage du graphe
         st.pyplot(fig_heatmap)
+        with st.expander("🔍 Lire l'analyse") :
+            st.markdown("""
+            ### 📈 Analyse : Matrice de Corrélation
 
+            Cette "heatmap" (carte de chaleur) quantifie la relation linéaire entre les variables numériques de notre dataset, sur une échelle de -1 (négative) à +1 (positive).
+
+            **1. L'Aperçu Stratégique Clé : `release_year` vs `lag_time`**
+
+            * **Constat :** Nous observons une **corrélation négative forte** (score d'environ -0.6 à -0.8).
+            * **Analyse :** C'est l'enseignement le plus important. Cela signifie que **plus un contenu est récent (`release_year` élevé), plus son délai d'ajout (`lag_time`) est faible**. C'est la confirmation statistique de la stratégie "Netflix Originals" : en produisant son propre contenu, Netflix le diffuse quasi-instantanément (`lag_time` proche de 0).
+
+            **2. Validation des Données : `duration_min` vs `duration_seasons`**
+
+            * **Constat :** Une corrélation négative très forte (proche de -1).
+            * **Analyse :** C'est une validation de la cohérence de nos données. Ces deux variables **s'excluent mutuellement** : un titre est soit un film (une valeur dans `duration_min`), soit une série (une valeur dans `duration_seasons`), mais jamais les deux.
+
+            **3. Autres Observations**
+
+            * **`release_year` vs `year_added` (Positive Forte) :** Corrélation intuitive. Elle confirme que le contenu ajouté récemment (`year_added`) est aussi, en général, du contenu produit récemment (`release_year`).
+            * **Absence de Corrélation (`month_added`) :** Le mois d'ajout ne montre aucun lien linéaire avec les autres facteurs, ce qui est attendu.
+
+            **Conclusion :**
+            Cette matrice valide la structure de nos données (films vs séries) et, plus important encore, elle fournit une preuve quantitative de l'évolution stratégique de Netflix vers la production et la diffusion immédiate de son propre contenu.
+            """)
 
     # Graphe 3 : Boxplot ======================
     boxplot_col = st.columns(2, gap="medium", vertical_alignment="center", width=1300)
@@ -136,7 +177,7 @@ def render_netflix_dashboard(netflix_df):
         sns.boxplot(
             data=data_df[data_df['type'] == 'Movie'],
             x='duration_min',
-            color=NETFLIX_RED,
+            color=color,
             ax=ax1)
 
         # Personnalisation 
@@ -177,6 +218,39 @@ def render_netflix_dashboard(netflix_df):
         # A ffichage graphe de la Durée des séries
         st.pyplot(boxplot_series)
 
+    with st.expander("🔍 Lire l'analyse") :
+        st.markdown("""
+        ### 📈 Analyse Comparée : Durée des Films vs. Séries
+
+        Ces deux "boxplots" (boîtes à moustaches) illustrent parfaitement les **deux stratégies de contenu radicalement différentes** de Netflix pour les films et les séries.
+
+        #### 1. Le Film : Le Distributeur Classique
+
+        Ce boxplot montre la répartition de la durée (en minutes) de tous les films.
+
+        * **Le Constat :** La boîte (le 50% central du catalogue) est concentrée autour de **90-110 minutes**. La ligne médiane (le film "typique") se situe également dans cette plage.
+        * **L'Analyse :** Netflix respecte les **standards de l'industrie cinématographique**. Le format du long-métrage classique est la norme.
+        * **Les Outliers (Points isolés) :** Ils sont nombreux et cruciaux pour la stratégie de "niche" :
+            * **À gauche (< 60 min) :** Documentaires courts, comédies spéciales (stand-up), ou programmes pour enfants.
+            * **À droite (> 150 min) :** Films d'auteur longs, épopées historiques, ou versions "Director's Cut".
+
+        #### 2. La Série : L'Investisseur à Haut Risque
+
+        Ce graphique, qui montre le nombre de saisons, est le plus révélateur de la stratégie Netflix.
+
+        * **Le Constat :** Le graphique est **totalement écrasé à gauche**. La ligne **médiane** (le point central de 50% des données) est située à **1 saison**.
+        * **L'Analyse :** C'est l'enseignement principal. La moitié de toutes les séries du catalogue n'ont jamais dépassé leur première saison.
+            1.  **Le "Cimetière Netflix" :** Cela reflète la stratégie "impitoyable" de Netflix, qui annule rapidement les séries qui n'atteignent pas leurs objectifs d'audience.
+            2.  **La Montée des Mini-séries :** Une grande partie de ces "1 saison" sont aussi des "Limited Series" (ex: *Le Jeu de la Dame*), un format volontairement court, moins risqué et très populaire.
+            3.  **Les "Hits" sont l'Exception :** Les séries à succès (les outliers comme *Stranger Things* ou *The Crown*) sont l'exception statistique qui finance le reste.
+
+        #### 3. Conclusion : Films (Volume) vs. Séries (Rétention)
+
+        * **Question :** Les films sont-ils plus longs que les séries ?
+        * **Réponse :** Les unités (minutes vs. saisons) sont incomparables. Mais si l'on pose une **hypothèse** (une série médiane = 1 saison de 8 épisodes * 45 min = 360 min), on constate qu'une série est **largement plus longue** qu'un film médian (100 min).
+
+        **Conclusion :** Netflix utilise les **Films** pour le **volume** (satisfaire tous les goûts) et les **Séries** pour la **rétention** (créer des "hits" qui fidélisent les abonnés).
+        """)
 
     st.write("")
     st.write("")
@@ -221,6 +295,28 @@ def render_netflix_dashboard(netflix_df):
     with interactif_graph_col[0] :
         # Affichage du graphique
         st.pyplot(barplot_fig)
+        with st.expander("🔍 Lire l'analyse") :
+            st.markdown("""
+            ### 📈 Analyse : Domination Géographique
+
+            Le `barplot` illustre la répartition géographique des productions de contenu sur Netflix, en se concentrant sur les **N** premiers pays (défini par le widget).
+
+            **1. Le Constat (Ce que le graphique montre)**
+
+            Quelle que soit la valeur de N (5, 10 ou 15), le constat est sans appel :
+
+            * **Hégémonie Américaine :** Les **États-Unis** ne sont pas seulement en tête, ils dominent de manière écrasante. Leur production représente souvent plus que les 9 autres pays du top 10 réunis.
+            * **Les Puissances Secondaires :** L'**Inde** (grâce à Bollywood et à sa large population) et le **Royaume-Uni** (forte industrie télévisuelle) se distinguent clairement comme les deux autres piliers de la production.
+            * **La "Longue Traîne" :** On observe un **fossé important** après le trio de tête. La contribution des autres pays chute rapidement, ce qui montre que si le catalogue est "international", il est en réalité fortement concentré sur quelques acteurs majeurs.
+
+            **2. L'Analyse (Pourquoi ?)**
+
+            Cette domination s'explique par une combinaison de facteurs historiques et économiques :
+
+            * **Héritage d'Hollywood :** Les États-Unis sont les pionniers de l'industrie cinématographique moderne et disposent d'un catalogue historique inégalé.
+            * **Origine de Netflix :** Netflix est une entreprise américaine. Son service a d'abord été lancé et optimisé pour son marché domestique.
+            * **Force d'Exportation Culturelle :** Le contenu américain (films et séries en langue anglaise) a la plus grande force d'exportation culturelle au monde.
+            """)
 
     # Graphe 5 : Histogramme ==================================
     st.sidebar.write("")
@@ -234,7 +330,7 @@ def render_netflix_dashboard(netflix_df):
 
     # Création de la fonction
     @st.cache_data
-    def create_histplot_figure(data_df, selectbox_year, bins, color) :
+    def create_histplot_figure(data_df, selectbox_year, bins, color, dark_grey_color) :
         fig, ax = plt.subplots()
         sns.histplot(
             data=data_df,
@@ -244,12 +340,12 @@ def render_netflix_dashboard(netflix_df):
             kde=True,              
             line_kws={             
                 # Personnalisation de la ligne KDE
-                'color': DARK_GREY,
+                'color': dark_grey_color,
                 'linewidth': 3}, 
             ax=ax)
 
         # Personnalisation
-        if year_selection == "release_year" :
+        if selectbox_year == "release_year" :
             ax.set_title('Distribution des années de sortie du contenu')
             ax.set_xlabel('Année de sortie')
         else :
@@ -261,8 +357,26 @@ def render_netflix_dashboard(netflix_df):
         return fig
 
     # Appel de la fonction
-    histplot_fig = create_histplot_figure(netflix_df, year_selection, nb_bins, NETFLIX_RED)
+    histplot_fig = create_histplot_figure(netflix_df, year_selection, nb_bins, NETFLIX_RED, DARK_GREY)
 
     with interactif_graph_col[1] :
         # Affichage du graphe
         st.pyplot(histplot_fig)
+        with st.expander("🔍 Lire l'analyse") :
+            st.markdown("""
+            ### 📈 Analyse : Évolution Temporelle du Catalogue
+
+            Cet histogramme montre la distribution du contenu Netflix soit par **Année de Sortie** (son "âge" réel), soit par **Année d'Ajout** (son arrivée sur la plateforme). L'analyse change radicalement en fonction de votre choix.
+
+            #### 1. Si vous sélectionnez "release_year" (Année de Sortie)
+
+            * **Le Constat :** Le graphique est **fortement asymétrique à gauche** (*left-skewed*). La grande majorité des films et séries disponibles ont été produits au cours des 5 à 10 dernières années.
+            * **L'Analyse :** Cela illustre la stratégie de Netflix axée sur la **"fraîcheur"**. Le modèle économique repose sur un renouvellement constant, le lancement de "Netflix Originals" (qui ont un `lag_time` de 0) et l'acquisition de contenus récents. Le catalogue n'est pas une "archive" du cinéma, c'est une plateforme de nouveautés.
+
+            #### 2. Si vous sélectionnez "year_added" (Année d'Ajout)
+
+            * **Le Constat :** Le graphique montre une **croissance exponentielle** des ajouts de contenu, culminant autour de 2018-2019, suivie d'une **baisse notable** en 2020-2021.
+            * **L'Analyse :** C'est l'histoire de l'essor du streaming. La baisse de 2020 n'est pas un désintérêt, mais le résultat de deux facteurs majeurs :
+            1. **COVID-19 :** L'arrêt brutal de toutes les productions mondiales a tari le "pipeline" de nouveaux contenus.
+            2. **La Concurrence :** L'arrivée de Disney+, HBO Max, etc., a non seulement fragmenté le marché mais a aussi poussé Netflix à pivoter d'une stratégie de "volume" à une stratégie de "qualité" (blockbusters).
+            """)
