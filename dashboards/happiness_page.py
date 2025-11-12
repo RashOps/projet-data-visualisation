@@ -7,7 +7,12 @@ import plotly.express as px
 from utils.chart_styles import get_happiness_layout
 
 def render_happiness_dashboard(world_happiness_df) :
-    st.write("Dashboard World Happiness Report")
+    st.header("Dashboard World Happiness Report")
+    st.markdown("""
+    Cette section propose une exploration **interactive** des facteurs du bonheur mondial, en utilisant la bibliothèque **Plotly Express**.  
+    L'objectif est d'utiliser des visualisations dynamiques pour explorer les données.  
+    **Passez votre souris** sur les graphiques pour afficher les détails, **zoomez** sur les cartes, et **regardez les animations** (bar chart race) pour comprendre les tendances.
+    """)
 
     # ===========================================================
     # Les KPI
