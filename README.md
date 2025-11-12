@@ -1,68 +1,74 @@
 # Analyse de Données et Dashboard Streamlit : Netflix & World Happiness
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-red?logo=streamlit)
-![Pandas](https://img.shields.io/badge/Pandas-2.0%2B-blue?logo=pandas)
-![Plotly](https://img.shields.io/badge/Plotly-5.15%2B-blue?logo=plotly)
-![Seaborn](https://img.shields.io/badge/Seaborn-0.12%2B-darkblue?logo=seaborn)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.33%2B-red?logo=streamlit)](https://streamlit.io)
+[![Pandas](https://img.shields.io/badge/Pandas-2.0%2B-blue?logo=pandas)](https://pandas.pydata.org/)
+[![Plotly](https://img.shields.io/badge/Plotly-5.15%2B-blue?logo=plotly)](https://plotly.com/)
+[![Seaborn](https://img.shields.io/badge/Seaborn-0.12%2B-darkblue?logo=seaborn)](https://seaborn.pydata.org/)
 
-Ce projet est un dashboard web interactif, construit avec **Streamlit**, qui présente une analyse de données complète de deux datasets distincts. Il a été réalisé dans le cadre d'un projet de data visualisation, démontrant des compétences en nettoyage de données, analyse exploratoire (EDA), et en création de visualisations statiques et interactives.
+**[ 🔴 (Bientôt) Voir l'application déployée ici ]**
 
-**L'une des particularités de ce projet est l'utilisation de Streamlit, un framework que j'ai appris spécifiquement pour transformer une analyse de données statique (type Jupyter Notebook) en une application web multi-pages dynamique et accessible.**
+Ce projet est une application web de data visualisation complète, construite avec **Streamlit**, qui répond à un cahier des charges académique précis. Il démontre une maîtrise de l'ensemble du pipeline de data analyse : du nettoyage (Data Cleaning) et de l'analyse exploratoire (EDA) à la création de visualisations statiques (`Seaborn`) et de dashboards interactifs (`Plotly`).
+
+L'une des particularités de ce projet est l'utilisation de **Streamlit** et de sa nouvelle fonctionnalité `st.navigation` pour transformer une analyse de données traditionnelle (de type Jupyter Notebook) en une application web multi-pages dynamique et professionnelle.
 
 ---
 
-## 🚀 Aperçu du Dashboard
+## 🚀 Aperçu du Dashboard Interactif
 
-![dashboard_screenshot](./images/dashboard_screenshot.png)
+La pièce maîtresse de ce projet est le dashboard interactif, qui combine les deux analyses en un seul outil puissant avec une sidebar dynamique, des KPIs et des graphiques interactifs.
+
+*(**Note :** Remplacez cette image par un GIF que vous aurez capturé de votre page "Dashboard" en action. C'est essentiel.)*
+
+![GIF du Dashboard Interactif en Action](./images/dashboard_screenshot.png)
+
+---
+
+## 🎯 Objectifs du Projet (selon le Cahier des Charges)
+
+Ce projet est divisé en deux parties principales, chacune avec une bibliothèque de visualisation distincte :
+
+1.  **Partie 1 : Analyse Statique avec `Seaborn`**
+    * **Dataset :** Netflix Movies and TV Shows
+    * **Objectif :** Utiliser les graphiques statistiques de Seaborn (`countplot`, `barplot`, `histplot`, `heatmap`, `boxplot`) pour identifier les tendances de contenu, la stratégie géographique et les modèles temporels du catalogue Netflix.
+
+2.  **Partie 2 : Analyse Interactive avec `Plotly`**
+    * **Dataset :** World Happiness Report (5 fichiers CSV de 2015 à 2019)
+    * **Objectif :** Démontrer des compétences en ingénierie de données (harmonisation de 5 fichiers), puis utiliser la puissance de Plotly (`choropleth`, `scatter`, `line`, `bar chart race`) pour explorer de manière interactive les facteurs qui influencent le bonheur mondial.
 
 ---
 
 ## 🛠️ Stack Technique
 
-Ce projet met en œuvre un pipeline de data analyse complet, de la donnée brute au dashboard web.
-
 * **Langage :** Python
-* **Analyse & Manipulation de Données :** Pandas
+* **Analyse & Manipulation de Données :** Pandas, NumPy
 * **Visualisation de Données (Statique) :** Matplotlib & Seaborn
 * **Visualisation de Données (Interactive) :** Plotly Express
-* **Dashboarding & Application Web :** Streamlit
+* **Application Web & Dashboarding :** Streamlit
 
 ---
 
-## 📂 Structure du Projet & Analyses
+## 🧭 Structure du Projet : Du Processus au Produit Fini
 
-L'application est structurée en plusieurs pages, chacune se concentrant sur une étape clé du processus d'analyse.
+L'architecture de l'application est conçue pour mettre en valeur à la fois le **processus d'analyse** (tel que demandé par le cahier des charges) et le **produit final** (le dashboard interactif).
 
-### Partie 1 : Analyse du Catalogue Netflix (avec Seaborn)
+### 1. Le Processus (Le "Making-of" Académique)
 
-Cette partie se concentre sur l'analyse exploratoire d'un dataset statique pour en tirer des conclusions claires, en utilisant **Seaborn** pour des visualisations statistiques.
+Les sections "Partie 1" et "Partie 2" de la barre de navigation sont conçues pour montrer le travail d'analyse étape par étape :
 
-* **Page 1 : Analyse Exploratoire (Netflix)**
-    * Détaille le processus de **Data Cleaning** : gestion des valeurs nulles, transformation des types (`date_added`), et feature engineering (`main_country`, `main_genre`, `lag_time`).
-    * Présente le dataframe nettoyé utilisé pour les visualisations.
+* **Page "Analyse et Cleaning (Netflix)" :** Démontre le processus de Data Cleaning sur le dataset Netflix, en utilisant `st.echo()` pour expliquer les transformations de données.
+* **Page "Visualisation (Seaborn)" :** Présente les graphiques statiques de Seaborn avec une analyse textuelle détaillée sous chaque graphique, conformément à la demande.
+* **Page "Harmonisation (Happiness)" :** Explique le processus d'ETL complexe nécessaire pour fusionner et nettoyer les 5 fichiers CSV du World Happiness Report.
+* **Page "Visualisation (Plotly)" :** Présente les graphiques interactifs de Plotly avec les conclusions analytiques associées.
 
-* **Page 2 : Graphiques (Seaborn)**
-    * **Distribution des Contenus :** `countplot` montrant la répartition Films vs. Séries.
-    * **Analyse Géographique :** `barplot` du Top 10 des pays producteurs.
-    * **Analyse Temporelle :** `histplot` de la distribution des années de sortie.
-    * **Analyse de Durée :** `boxplot` comparant la durée des films (minutes) et des séries (saisons).
-    * **Corrélations :** `heatmap` des variables numériques pour identifier les liens (ex: `lag_time` vs `release_year`).
+### 2. Le Produit Fini (Le Dashboard Interactif)
 
-### Partie 2 : Analyse du World Happiness Report (avec Plotly)
-
-Cette partie démontre la capacité à gérer des données plus complexes (fichiers multiples) et à créer des visualisations **interactives** avec **Plotly**.
-
-* **Page 3 : Harmonisation des Datasets**
-    * Démontre un processus de **Data Cleaning avancé** en chargeant 5 fichiers CSV distincts (2015-2019).
-    * **Harmonisation des Schémas :** Renommage et mappage des colonnes (ex: `Happiness Score` vs `Score`).
-    * **Concaténation** finale en un seul dataset master propre.
-
-* **Page 4 : Visualisation (Plotly)**
-    * **Analyse Géographique :** `choropleth` (carte mondiale) interactive des scores de bonheur.
-    * **Analyse des Facteurs :** `scatter` interactif pour explorer la relation entre le PIB et le score de bonheur.
-    * **Évolution Temporelle :** `lineplot` pour suivre l'évolution des scores par région ou pays.
-    * **Corrélations :** `heatmap` interactive des facteurs de bonheur (PIB, Santé, Liberté...).
+La page **"Dashboard"** est la synthèse de ce projet. C'est un outil d'exploration qui :
+* Utilise un **routeur** pour charger les modules de dashboard (`netflix_page.py`, `happiness_page.py`).
+* Dispose d'une **sidebar dynamique** qui affiche des filtres contextuels en fonction du dataset sélectionné.
+* Affiche des **KPIs** (`st.metric`) qui se mettent à jour en temps réel.
+* Intègre des visualisations avancées comme un **"Bar Chart Race"** animé.
+* Utilise le caching (`@st.cache_data`) pour des performances optimales.
 
 ---
 
@@ -76,12 +82,20 @@ Pour explorer l'application sur votre machine :
     cd VOTRE_PROJET
     ```
 
-2.  **Installez les dépendances :**
+2.  **Créez un environnement virtuel (recommandé) :**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # Sur Mac/Linux
+    .\venv\Scripts\activate   # Sur Windows
+    ```
+
+3.  **Installez les dépendances :**
     ```bash
     pip install -r requirements.txt
     ```
 
-3.  **Lancez l'application Streamlit :**
+4.  **Lancez l'application Streamlit :**
+    *(Assurez-vous de lancer `app.py`, qui est le nouveau contrôleur de navigation)*
     ```bash
-    streamlit run 1_Accueil.py
+    streamlit run app.py
     ```
