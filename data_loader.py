@@ -6,14 +6,23 @@ import streamlit as st
 # Netflix section 1
 @st.cache_data 
 def load_netflix_data_cleaning():
-    netflix = pd.read_csv('./data/netflix_titles.csv') 
-    return netflix
+    try : 
+        netflix = pd.read_csv('./data/netflix_titles.csv') 
+        return netflix
+    except FileNotFoundError :
+        st.error("ERREUR : Le fichier 'netflix_titles.csv' est manquant dans le dossier '/data'.")
+        return None
+
 
 # Netflix section 2
 @st.cache_data 
 def load_netflix_data_analysis():
-    df = pd.read_csv('./data/netflix_cleaned.csv')
-    return df
+    try : 
+        df = pd.read_csv('./data/netflix_cleaned.csv')
+        return df
+    except FileNotFoundError :
+        st.error("ERREUR : Le fichier 'netflix_cleaned.csv' est manquant dans le dossier '/data'.")
+        return None
 
 # ===================================================================================
 # World Happiness section 1
@@ -164,8 +173,26 @@ def load_happiness_data_cleaning():
         print(f"Une erreur inattendue est survenue : {e}")
     return df_final
 
+# Mise en cache de tous les datasets world happiness report 2015 - 2019
+@st.cache_data
+def load_happiness_all_df():
+    try :
+        df_2015 = pd.read_csv('./data/2015.csv')
+        df_2016 = pd.read_csv('./data/2016.csv')
+        df_2017 = pd.read_csv('./data/2017.csv')
+        df_2018 = pd.read_csv('./data/2018.csv')
+        df_2019 = pd.read_csv('./data/2019.csv')
+        return df_2015, df_2016, df_2017, df_2018, df_2019
+    except FileNotFoundError :
+        st.error("ERREUR : Le fichier 'world_happiness_2015-2019_combined.csv' est manquant dans le dossier '/data'.")
+        return None
+
 # World Happiness section 2
 @st.cache_data
 def load_happiness_data_analysis():
-    world_happiness_report = pd.read_csv("./data/world_happiness_2015-2019_combined.csv")
-    return world_happiness_report
+    try : 
+        world_happiness_report = pd.read_csv("./data/world_happiness_2015-2019_combined.csv")
+        return world_happiness_report
+    except FileNotFoundError :
+        st.error("ERREUR : Le fichier 'world_happiness_2015-2019_combined.csv' est manquant dans le dossier '/data'.")
+        return None

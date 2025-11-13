@@ -5,7 +5,7 @@ import numpy as np
 
 # Configuration de la page principale
 st.set_page_config(
-    page_title="Partie 1 - Analyse Exporatoire",
+    page_title="Analyse et Cleaning du dataset Netflix",
     page_icon="🔎",
     layout="centered",
     initial_sidebar_state = "expanded"

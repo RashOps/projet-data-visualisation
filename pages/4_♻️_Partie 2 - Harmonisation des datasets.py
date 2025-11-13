@@ -1,11 +1,11 @@
 # Imporation des dépendances
 import pandas as pd
-import plotly.express as px
 import streamlit as st
+from data_loader import load_happiness_all_df
 
 # Configuration de la page principale
 st.set_page_config(
-    page_title="Partie 2 - Harmonisation des datasets",
+    page_title="Harmonisation des datasets World Happiness Report 2015-2019",
     page_icon="♻️",
     layout="centered",
     initial_sidebar_state = "expanded"
@@ -19,12 +19,8 @@ st.title("Harmonisation des datasets : World Happiness Report")
 # =============================================================================================================================
 st.subheader("Analyse de nos datasets")
 
-# Chargemet des datasets
-df_2015 = pd.read_csv('./data/2015.csv')
-df_2016 = pd.read_csv('./data/2016.csv')
-df_2017 = pd.read_csv('./data/2017.csv')
-df_2018 = pd.read_csv('./data/2018.csv')
-df_2019 = pd.read_csv('./data/2019.csv')
+# Mise en cache et Chargement des datasets
+df_2015, df_2016, df_2017, df_2018, df_2019 = load_happiness_all_df()
 
 # Création des colonnes
 col_2015_2017, col_2016_2018 = st.columns(2)
@@ -358,7 +354,12 @@ with col_next1 :
         label="Télécharger le nouveau DataFrame en CSV",
         data="csv_data",
         file_name="world_happiness_2015-2019_combined.csv",
-        mime="text/csv")
+        mime="text/csv",
+        icon="🗒️",
+        use_container_width=True)
 
 with col_next2 :
-    st.link_button("Les graphiques intéractifs avec Plotly", url="/Partie_2_-_Visualisation_avec_Plotly", icon="➡️")
+    st.link_button("Les graphiques intéractifs avec Plotly", 
+        url="/Partie_2_-_Visualisation_avec_Plotly", 
+        icon="➡️",
+        use_container_width=True)

@@ -26,7 +26,12 @@ st.sidebar.write("")
 
 # Chargement des dataframes
 netflix = load_netflix_data_analysis()
+if netflix is None:
+    st.stop()
+
 world_happiness_report = load_happiness_data_analysis()
+if world_happiness_report is None:
+    st.stop()
 
 # Routage avec les modules
 if dataframe == "Netflix":
