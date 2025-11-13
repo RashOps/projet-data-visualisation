@@ -18,8 +18,6 @@ L'une des particularités de ce projet est l'utilisation de **Streamlit** et de 
 
 La pièce maîtresse de ce projet est le dashboard interactif, qui combine les deux analyses en un seul outil puissant avec une sidebar dynamique, des KPIs et des graphiques interactifs.
 
-*(**Note :** Remplacez cette image par un GIF que vous aurez capturé de votre page "Dashboard" en action. C'est essentiel.)*
-
 ![GIF du Dashboard Interactif en Action](./images/dashboard_screenshot.png)
 
 ---
