@@ -163,6 +163,8 @@ Les paramètres typographiques des graphiques sont finement ajustés :
 - Valeurs sur les axes (ticks) : Les chiffres indiquant les valeurs sur les axes sont également de couleur gris foncé.
 """)
 
+st.info("Charte graphique fait avec Gemini", icon="ℹ️")
+
 # --- CHARTE GRAPHIQUE ---
 
 # 1. Définir les couleurs
