@@ -1,3 +1,20 @@
+"""
+Point d'Entrée Principal et Contrôleur de Navigation.
+
+Ce script n'est pas une "page" visible par l'utilisateur (la page visible
+est 1_🏡_Accueil.py).
+
+Son unique rôle est de :
+1. Définir la structure de navigation globale de l'application
+   (les pages, leurs icônes, et les sections du menu) en utilisant
+   la fonction `st.navigation`.
+2. Appliquer une configuration de page globale (`st.set_page_config`).
+3. Lancer l'application avec `pg.run()`.
+
+Pour démarrer l'application, c'est CE fichier qu'il faut exécuter :
+streamlit run app.py
+"""
+
 import streamlit as st
 
 st.logo(image="./images/logo_pstb.png", size="large", icon_image="./images/logo_pstb.png")

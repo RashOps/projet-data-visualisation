@@ -1,3 +1,23 @@
+"""
+Page "Processus" : Harmonisation des Données (World Happiness).
+
+Ce script correspond à la page "4_♻️_Partie 2 - Harmonisation des datasets"
+de l'application. Son unique objectif est de documenter le processus
+ETL (Extract-Transform-Load) complexe nécessaire pour fusionner
+les 5 datasets annuels (2015-2019) du World Happiness Report.
+
+Il contient :
+1.  Le chargement des 5 fichiers CSV bruts.
+2.  Le code (`st.echo`) et les explications (`st.markdown`) détaillant
+    chaque étape d'harmonisation (renommage de colonnes,
+    mapping de régions, concaténation).
+3.  La présentation du DataFrame final harmonisé.
+4.  Un bouton de téléchargement pour le dataset nettoyé résultant.
+
+Cette page est le "making-of" qui prépare les données pour la page
+suivante : "5_📊_Visualisation avec Plotly".
+"""
+
 # Imporation des dépendances
 import pandas as pd
 import streamlit as st
@@ -121,7 +141,7 @@ st.write("")
 st.write("")
 st.subheader("Harmonisation des dataframes")
 
-with st.expander("Découvrez le code") : 
+with st.expander("Découvrir le code") : 
     with st.echo() :
         # Régularisation des dataframes
         # 1. Définition des dictionnaires de renommage pour chaque année
@@ -332,12 +352,15 @@ st.markdown("""
     
     **Aucune ligne n'a été perdue.**
             
+    ---
+            
     ##### Conclusion
     On obtient un dataframe avec toutes les colonnes importantes et exploitables.
 """)
 st.dataframe(df_final)
 
 # Création de colonnes
+st.write("")
 st.markdown("""Téléchargez le nouveau dataframe et passez à la visualisation avec Plotly""")
 col_next1, col_next2 = st.columns(2)
 
@@ -351,7 +374,7 @@ csv_data = convert_df_to_csv(df_final)
 
 with col_next1 : 
     st.download_button(
-        label="Télécharger le nouveau DataFrame en CSV",
+        label="Téléchargez le nouveau DataFrame en CSV",
         data="csv_data",
         file_name="world_happiness_2015-2019_combined.csv",
         mime="text/csv",

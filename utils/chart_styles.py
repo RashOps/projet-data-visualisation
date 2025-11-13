@@ -1,3 +1,25 @@
+"""
+Module de Centralisation des Chartes Graphiques (DRY).
+
+Ce module a pour objectif de centraliser toute la configuration
+stylistique des graphiques, en respectant le principe DRY
+(Don't Repeat Yourself), afin de garantir une identité visuelle
+cohérente à travers toute l'application.
+
+Il fournit des fonctions "setup" distinctes pour :
+
+1.  **Netflix (Seaborn) :**
+    - `setup_netflix_theme()`: Applique le `sns.set_theme()` global
+      et retourne les palettes de couleurs (NETFLIX_RED, binary_palette, etc.).
+    - L'utilisation de `@st.cache_resource` garantit que ce
+      thème n'est appliqué qu'une seule fois.
+
+2.  **World Happiness (Plotly) :**
+    - `get_happiness_layout()`: Retourne le dictionnaire de
+      template global (`GLOBAL_TEMPLATE_LAYOUT`) pour tous
+      les graphiques Plotly.
+"""
+
 import seaborn as sns
 import streamlit as st
 import plotly.express as px

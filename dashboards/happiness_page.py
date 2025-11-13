@@ -1,3 +1,20 @@
+"""
+Module de Rendu pour le Dashboard "World Happiness Report".
+
+Ce script n'est pas une page autonome, mais un module. Il contient
+la fonction principale `render_happiness_dashboard()` qui est
+appelée par le routeur principal (`6_📝_Dashboard.py`) lorsque
+l'utilisateur sélectionne ce dataset.
+
+Son rôle est de :
+1.  Construire l'intégralité de l'interface du dashboard Happiness.
+2.  Afficher les filtres de la barre latérale (sidebar)
+    spécifiques à ce dataset (ex: sliders, multiselects).
+3.  Calculer et afficher les KPIs (Indicateurs Clés).
+4.  Créer et afficher tous les graphiques interactifs Plotly
+    (Choropleth, Scatter, Line, Bar Race).
+"""
+
 # Imporation des dépendances
 import streamlit as st
 import plotly.express as px
@@ -243,9 +260,12 @@ def render_happiness_dashboard(world_happiness_df) :
         options=all_countries,
         default=["France", "Germany", "United States", "Japan", "India"], max_selections=10)
 
-    # Filtrage du DataFrame pour les pays sélectionnés
-    df_filtered = world_happiness_df[world_happiness_df['Country'].isin(selected_countries)]
-
+    # Gestion des erreurs de selection
+    if not selected_countries :
+        st.warning("Veuillez sélectionner au moins un pays dans la barre latérale pour afficher le graphique.", icon="🚨")
+    else :
+        # Filtrage du DataFrame pour les pays sélectionnés
+        df_filtered = world_happiness_df[world_happiness_df['Country'].isin(selected_countries)]
 
     # Création du graphique 
     fig = px.line(

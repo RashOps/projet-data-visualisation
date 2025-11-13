@@ -1,3 +1,20 @@
+"""
+Page d'Accueil et Sommaire de l'Application (1_🏡_Accueil.py).
+
+Ce script est la page d'atterrissage (landing page) principale
+de l'application.
+
+Son rôle est de :
+1.  **Décrire** le projet : présenter le cahier des charges,
+    les datasets (Netflix, World Happiness) et les objectifs.
+2.  **Guider** l'utilisateur : agir comme un sommaire visuel
+    en centralisant les liens vers les deux composantes principales
+    du projet :
+    * Le **Produit Fini** (le Dashboard interactif).
+    * Le **Processus Académique** (les pages de "making-of" :
+        Nettoyage et Visualisation statique).
+"""
+
 # Imporation des dépendances
 import streamlit as st
 
@@ -122,7 +139,7 @@ st.divider()
 # Annexes et telechargement des notebooks sur mon github
 st.subheader("Annexes")
 st.markdown("""
-    Télécharger mes notebooks sur mon Github.
+    Télécharger les notebooks utilisés sur mon Github.
 """)
 st.image(image="./images/github-white.png", width=100)
 st.link_button("Lien Github", url="https://github.com/RashOps/projet-data-visualisation", icon="🔗")

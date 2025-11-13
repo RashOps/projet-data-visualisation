@@ -1,27 +1,55 @@
-# data_loader.py
+"""
+Module de Chargement et de Mise en Cache des Données (Data Loading).
+
+Ce module centralise toutes les fonctions de lecture des fichiers CSV
+pour l'application. Il agit comme la "source unique de vérité" pour
+l'accès aux données.
+
+Fonctionnalités Clés :
+- Utilise `@st.cache_data` pour mettre en cache les DataFrames en mémoire,
+  garantissant des performances optimales et un re-chargement instantané
+  lors de la navigation entre les pages.
+- Gère les erreurs `FileNotFoundError` pour que l'application ne
+  plante pas si un fichier de données est manquant.
+
+Contient les chargeurs pour :
+- Données Netflix (brutes et nettoyées)
+- Données World Happiness Report (fichiers annuels bruts et version harmonisée)
+"""
+
 import pandas as pd
 import streamlit as st
+import sys
 
 # ===================================================================================
 # Netflix section 1
 @st.cache_data 
 def load_netflix_data_cleaning():
+    file_path = './data/netflix_titles.csv'
     try : 
-        netflix = pd.read_csv('./data/netflix_titles.csv') 
+        netflix = pd.read_csv(file_path) 
         return netflix
     except FileNotFoundError :
-        st.error("ERREUR : Le fichier 'netflix_titles.csv' est manquant dans le dossier '/data'.")
+        st.error(f"ERREUR CRITIQUE: Le fichier {file_path} est manquant.")
+        st.error("L'application ne peut pas charger la partie Netflix.")
         return None
-
+    except Exception as e:
+        st.error(f"Une erreur inattendue est survenue en chargeant {file_path}: {e}")
+        return None
 
 # Netflix section 2
 @st.cache_data 
 def load_netflix_data_analysis():
+    file_path = './data/netflix_cleaned.csv'
     try : 
-        df = pd.read_csv('./data/netflix_cleaned.csv')
+        df = pd.read_csv(file_path)
         return df
     except FileNotFoundError :
-        st.error("ERREUR : Le fichier 'netflix_cleaned.csv' est manquant dans le dossier '/data'.")
+        st.error(f"ERREUR CRITIQUE: Le fichier {file_path} est manquant.")
+        st.error("L'application ne peut pas charger la partie Netflix.")
+        return None
+    except Exception as e:
+        st.error(f"Une erreur inattendue est survenue en chargeant {file_path}: {e}")
         return None
 
 # ===================================================================================
@@ -184,15 +212,24 @@ def load_happiness_all_df():
         df_2019 = pd.read_csv('./data/2019.csv')
         return df_2015, df_2016, df_2017, df_2018, df_2019
     except FileNotFoundError :
-        st.error("ERREUR : Le fichier 'world_happiness_2015-2019_combined.csv' est manquant dans le dossier '/data'.")
+        st.error("ERREUR : Les fichiers concernés sont manquant dans le dossier '/data'.")
+        st.error("L'application ne peut pas charger la partie Netflix.")
+        return None
+    except Exception as e:
+        st.error(f"Une erreur inattendue est survenue en chargeant les fichiers : {e}")
         return None
 
 # World Happiness section 2
 @st.cache_data
 def load_happiness_data_analysis():
-    try : 
-        world_happiness_report = pd.read_csv("./data/world_happiness_2015-2019_combined.csv")
-        return world_happiness_report
-    except FileNotFoundError :
-        st.error("ERREUR : Le fichier 'world_happiness_2015-2019_combined.csv' est manquant dans le dossier '/data'.")
+    file_path = './data/world_happiness_2015-2019_combined.csv'
+    try:
+        df = pd.read_csv(file_path)
+        return df
+    except FileNotFoundError:
+        st.error(f"ERREUR CRITIQUE : Le fichier {file_path} est manquant.")
+        st.error("Assurez-vous d'avoir exécuté la page d'harmonisation (4_♻️) au moins une fois.")
+        return None
+    except Exception as e:
+        st.error(f"Une erreur inattendue est survenue en chargeant {file_path}: {e}")
         return None

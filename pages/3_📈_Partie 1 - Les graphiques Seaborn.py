@@ -1,8 +1,29 @@
+"""
+Page "Processus" : Visualisation Statique Seaborn (Netflix).
+
+Ce script correspond à la page "3_📈_Partie 1 - Les graphiques Seaborn"
+de l'application. Son objectif est de documenter le processus
+d'analyse et de visualisation (statique), conformément au
+cahier des charges de la Partie 1.
+
+Il contient :
+1.  Le chargement du dataset nettoyé (`netflix_cleaned.csv`).
+2.  La définition de la charte graphique Seaborn (`setup_netflix_theme`).
+3.  Le code de création de chaque graphique statique (countplot,
+    barplot, boxplot, histplot, heatmap).
+4.  L'analyse textuelle et l'interprétation détaillée sous chaque
+    graphique, répondant aux questions du projet.
+
+Cette page est le "rapport d'analyse" statique, distincte du
+Dashboard interactif.
+"""
+
 # Imporation des dépendances
 import pandas as pd
 import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
+from utils.chart_styles import setup_netflix_theme
 
 # Configuration de la page principale
 st.set_page_config(
@@ -20,10 +41,8 @@ st.title("Création des graphiques avec Seaborn")
 # =============================================================================================================================
 
 st.info("""
-    **Note** : Si vous n'avez pas encore vu les étapes du nettoyage du dataset original,
-    Cliquez sur le lien ci-dessous pour acceder aux étapes du nettoyage.""", 
-    icon="💡"
-    )
+    **Note** : Si vous n'avez pas encore vu les étapes du nettoyage du dataset original, cliquez sur le lien ci-dessous pour accéder aux étapes du nettoyage.""", 
+    icon="💡")
 
 st.link_button("Analyse exploratoire et nettoyage", url="/Partie_1_-_Analyse_Exploratoire")
 
@@ -31,9 +50,9 @@ st.link_button("Analyse exploratoire et nettoyage", url="/Partie_1_-_Analyse_Exp
 # Visualisation du dataset nettoyé
 st.subheader("Visualisation du dataset nettoyé")
 st.markdown("""
-    Après le nettoyage de notre dataframe, et la création d'un nouveau dataframe exploitable,
-    nous nous attaquerons à la création des graphiques avec Seaborn afin d'analyser nos données.
-    Qui sera précédé par une analyse descriptive du dataframe nettoyé.
+    Après le nettoyage de notre dataframe et la création d'un nouveau dataframe exploitable, nous nous attaquerons à la création des graphiques avec **Seaborn** afin d'analyser nos données.
+
+    Cette étape sera précédée par une **analyse descriptive** du dataframe nettoyé.
 """)
 
 # Chargmenet du dataframe
@@ -49,13 +68,14 @@ st.write("")
 st.subheader("Pré-analyse : analyse descriptive")
 
 st.markdown("""
-    Dans cette analyse, nous verrons : 
-    - Nombre de films vs séries, 
-    - La répartition des contenus par pays et par année
-    - La répartition par genres les plus représentés
+    Dans cette analyse, nous verrons :
+
+    * Le nombre de films vs séries.
+    * La répartition des contenus par pays et par année.
+    * La répartition des genres les plus représentés.
 """)
 
-with st.expander("Découvrez le code") : 
+with st.expander("Découvrir le code") : 
     with st.echo() :
         # Analyse descriptive - Partie 1 : Nombre de film VS Serie
         nbre_production_total = netflix['show_id'].count() # Détermination du nombre total de production (films + Series)
@@ -81,10 +101,11 @@ col1, col2 = st.columns(2)
 # Repartition des contenus par pays ==================================
 with col1 : 
     st.markdown("#### Répartition du contenus par pays")
-    nb_pays = st.number_input("Entrez un nombre pour voir la liste du classement des pays .", min_value=5, max_value=99)
+    nb_pays = st.number_input("Entrez un nombre pour voir la liste du classement des pays.", min_value=5, max_value=99)
     st.markdown("""
-        Entrez un nombre pour voir le classement des pays basé sur la repartition du contenus par pays.  
-        Entrez 99 pour voir l'entièreté du classement.""")
+        Entrez un nombre pour voir le classement des pays basé sur la **répartition du contenu** par pays.
+
+        Entrez **99** pour voir l'entièreté du classement.""")
 
     if nb_pays == 99 : 
         st.dataframe(repartition_prod_pay_sorted)
@@ -95,22 +116,25 @@ with col1 :
 # Repartition des contenus par années ================================
 with col2 : 
     st.markdown("#### Répartition du contenus par années de production")
-    nb_years = st.number_input("Entrez un nombre pour voir la liste de la repartition de contenu par année.", min_value=5, max_value=99)
+    nb_years = st.number_input("Entrez un nombre pour voir la liste de la repartition des titres par année.", min_value=5, max_value=99)
     st.markdown("""
-    Entrez un nombre pour voir le classement des années basé sur la repartition du contenus.  
-    Entrez 99 pour voir l'entièreté du classement.""")
+    Entrez un nombre pour voir le classement des années basé sur la **répartition du contenu**.
+
+    Entrez **99** pour voir l'entièreté du classement.""")
     if nb_pays == 99 : 
         st.dataframe(repartition_prod_year_sorted)
     else :
         st.dataframe(repartition_prod_year_sorted.head(nb_years))
 
 st.markdown("""
-    Ainsi nous prenons connaissances du nombre de films, de séries, et du nombre total de production,
-    Qui se poursuie avec la visualisation de la répartition des contenus produits par pays et par année de production et leur classement.
+    Ainsi, nous prenons connaissance du nombre de films, de séries, et du nombre total de productions.
+    L'analyse se poursuit avec la visualisation de la répartition des contenus par pays et par année, ainsi que leur classement.
 """)
 
 
 # Repartition du contenu par genre =================================
+st.write("")
+st.write("")
 st.markdown("#### Répartition du contenus par genre")
 
 with st.expander("Découvrez le code") : 
@@ -122,8 +146,8 @@ with st.expander("Découvrez le code") :
 nb_genre = st.number_input("Entrez un nombre pour voir la liste de la repartition de contenu par genre.", min_value=5, max_value=99)
 
 st.markdown("""
-Entrez un nombre pour voir le classement des genres sur la repartition du contenus.
-Entrez 99 pour voir l'entièreté du classement.""")
+    Entrez un nombre pour voir le classement des genres basé sur la **répartition du contenu**.  
+    Entrez **99** pour voir l'entièreté du classement.""")
 if nb_pays == 99 : 
     st.dataframe(repartition_prod_genre_sorted)
 else :
@@ -134,86 +158,46 @@ else :
 # Création d'une charte graphique
 st.subheader("Création d'une charte graphique et d'un template pour les graphiques")
 st.markdown("""
-🎨 Charte Graphique (Inspiration Netflix)
-##### 1. Couleurs
-La charte définit une palette de couleurs de base composée de quatre teintes principales :
+    🎨 Charte Graphique (Inspiration Netflix)
+    ##### 1. Couleurs
+    La charte définit une palette de couleurs de base composée de quatre teintes principales :
 
-- Rouge Netflix (un rouge vif : #E50914)  
-- Noir Netflix (un noir profond : #221f1f)  
-- Gris Clair (#B3B3B3)  
-- Gris Foncé (#4D4D4D)  
+    - Rouge Netflix (un rouge vif : #E50914)  
+    - Noir Netflix (un noir profond : #221f1f)  
+    - Gris Clair (#B3B3B3)  
+    - Gris Foncé (#4D4D4D)  
 
-À partir de celles-ci, des palettes spécifiques sont créées :
+    À partir de celles-ci, des palettes spécifiques sont créées :
 
-- Palette Principale : Conçue pour les graphiques simples (comme un top 10), elle utilise un dégradé allant du gris clair au gris foncé, puis au noir et enfin au rouge Netflix.  
-- Palette Binaire : Utilisée pour les comparaisons "Movie" vs "TV Show". Les "Movies" sont représentés en Rouge Netflix, et les "TV Shows" en gris foncé.
+    - Palette Principale : Conçue pour les graphiques simples (comme un top 10), elle utilise un dégradé allant du gris clair au gris foncé, puis au noir et enfin au rouge Netflix.  
+    - Palette Binaire : Utilisée pour les comparaisons "Movie" vs "TV Show". Les "Movies" sont représentés en Rouge Netflix, et les "TV Shows" en gris foncé.
 
-Palette Heatmap : Pour les cartes de chaleur, une palette de couleurs (cmap) est définie, allant du blanc au Rouge Netflix.
+    Palette Heatmap : Pour les cartes de chaleur, une palette de couleurs (cmap) est définie, allant du blanc au Rouge Netflix.
 
-##### 2. Style Global des Graphiques
-Le thème général (appliqué via Seaborn) est défini pour assurer la cohérence de tous les graphiques :
+    ##### 2. Style Global des Graphiques
+    Le thème général (appliqué via Seaborn) est défini pour assurer la cohérence de tous les graphiques :
 
-- Fond : Un style "whitegrid" est utilisé, fournissant un fond blanc avec de légères lignes de grille.  
-- Police : La police préférée est "Arial" (ou une police "sans-serif" par défaut) pour sa grande lisibilité.
+    - Fond : Un style "whitegrid" est utilisé, fournissant un fond blanc avec de légères lignes de grille.  
+    - Police : La police préférée est "Arial" (ou une police "sans-serif" par défaut) pour sa grande lisibilité.
 
-Les paramètres typographiques des graphiques sont finement ajustés :
+    Les paramètres typographiques des graphiques sont finement ajustés :
 
-- Titres des graphiques : Ils sont affichés en gras, en taille 18, et utilisent la couleur Noir Netflix.  
-- Étiquettes des axes (X et Y) : Elles sont en gras, en taille 14, et de couleur gris foncé.  
-- Valeurs sur les axes (ticks) : Les chiffres indiquant les valeurs sur les axes sont également de couleur gris foncé.
+    - Titres des graphiques : Ils sont affichés en gras, en taille 18, et utilisent la couleur Noir Netflix.  
+    - Étiquettes des axes (X et Y) : Elles sont en gras, en taille 14, et de couleur gris foncé.  
+    - Valeurs sur les axes (ticks) : Les chiffres indiquant les valeurs sur les axes sont également de couleur gris foncé.
 """)
 
 st.info("Charte graphique fait avec Gemini", icon="ℹ️")
 
-# --- CHARTE GRAPHIQUE ---
-
-# 1. Définir les couleurs
-# Palette de couleurs
-NETFLIX_RED = "#E50914"
-NETFLIX_BLACK = "#221f1f"
-LIGHT_GREY = "#B3B3B3"
-DARK_GREY = "#4D4D4D"
-
-# Palette pour les graphiques simples (ex: top 10)
-# Un dégradé de gris vers le rouge
-main_palette = sns.color_palette([LIGHT_GREY, DARK_GREY, NETFLIX_BLACK, NETFLIX_RED])
-
-# Palette pour les graphiques binaires (Movie vs TV Show)
-binary_palette = {
-    "Movie": NETFLIX_RED,
-    "TV Show": DARK_GREY
-}
-
-# Palette pour les heatmaps (de blanc vers rouge)
-heatmap_cmap = sns.light_palette(NETFLIX_RED, as_cmap=True)
-
-# 2. Définir le style global (Polices et Fond)
-sns.set_theme(
-    style="whitegrid",  # Fond blanc avec des grilles légères
-    font="Arial",       # Police propre et lisible (si installée, sinon "sans-serif")
-    rc={
-        # Police et couleur pour les titres
-        "axes.titlecolor": NETFLIX_BLACK,
-        "axes.titlesize": 18,
-        "axes.titleweight": "bold",
-        
-        # Police et couleur pour les étiquettes (axes x/y)
-        "axes.labelcolor": DARK_GREY,
-        "axes.labelsize": 14,
-        "axes.labelweight": "bold",
-        
-        # Police et couleur pour les "ticks" (valeurs sur les axes)
-        "xtick.color": DARK_GREY,
-        "ytick.color": DARK_GREY,
-    }
-)
+# --- Chargement de la charte graphique ---
+main_palette, binary_palette, heatmap_cmap, LIGHT_GREY, DARK_GREY, NETFLIX_BLACK, NETFLIX_RED = setup_netflix_theme()
 
 # ==========================================================================================================================
 # Premier graphe : countplot() ======================================================
 st.divider()
-st.subheader("Gaphe 1 : Comparaison films VS séries avec un countplot")
+st.subheader("Gaphe 1 : Comparaison films VS séries avec un (`countplot`)")
 
-with st.expander("Découvrez le code") : 
+with st.expander("Découvrir le code") : 
     with st.echo() : 
         fig, ax = plt.subplots()
 
@@ -238,24 +222,26 @@ with st.expander("Découvrez le code") :
 st.pyplot(fig)
 
 st.markdown("""
-    Commme vu précédemment lors de l'analyse descriptive, le diagramme `countplot` nous donne les mêmes resultats du nombres de films et de séries.
-    A raison de 6131 films contre 2676 pour les séries. Cependant Pourquoi y'a t'il plus de films que de séries sur le catalogue netflix ?  
-    Cette asymétrie s'explique historiquement par la stratégie de Netflix :
+    Comme l'a confirmé le diagramme `countplot` lors de l'analyse descriptive, le catalogue Netflix est dominé par les films, avec **6 131 titres contre 2 676 séries**.
 
-    1.**Coûts de Licence** : Il était plus rentable d'acquérir les droits d'un grand nombre de films existants pour construire rapidement un catalogue volumineux.  
-    2.**Modèle de "Longue Traîne (Long Tail)"** : Un large inventaire de films permet de satisfaire des goûts de niche et d'attirer une base d'utilisateurs plus large.  
-    3.**Coûts de Production** : Les séries, en particulier les productions originales, représentent un investissement beaucoup plus lourd et à plus long terme (coût par épisode, engagement sur plusieurs saisons) que la plupart des films."
+    Mais pourquoi observe-t-on une telle asymétrie ?
+
+    Cette disproportion s'explique historiquement par la stratégie d'acquisition de Netflix, articulée autour de trois axes principaux :
+
+    1.  **Coûts de Licence :** Il était initialement plus rentable d'acquérir les droits d'un grand nombre de films existants afin de construire rapidement un catalogue volumineux.
+    2.  **Modèle de la "Longue Traîne" (Long Tail) :** Disposer d'un large inventaire de films permet de satisfaire des goûts de niche très variés et, par conséquent, d'attirer une base d'utilisateurs plus large.
+    3.  **Coûts de Production :** Les séries, en particulier les productions originales, représentent un investissement beaucoup plus lourd et à plus long terme (coût par épisode, engagement sur plusieurs saisons) que l'acquisition ou la production de la plupart des films.
 """)
 
 
 # Deuxieme Graphe : barplot() ==============================================
 st.write("")
 st.write("")
-st.subheader("Gaphe 2 : Top 10 des pays producteurs avec barplot")
+st.subheader("Gaphe 2 : Top 10 des pays producteurs avec (`barplot`)")
 
 nb_top10_countries = st.number_input("Entrez un nombre pour modifier le graphe", min_value=5, value=10, max_value=15)
 
-with st.expander("Découvrez le code") : 
+with st.expander("Découvrir le code") : 
     with st.echo() :
         # Préparation des données (Top 10)
         top_10_countries = netflix['main_country'].value_counts().head(nb_top10_countries).reset_index()
@@ -297,11 +283,11 @@ st.markdown("""
 # Troisième Graphe : histplot() ==============================================
 st.write("")
 st.write("")
-st.subheader("Gaphe 3 : Distribution des productions en fonctions des années de sortie avec un histplot")
+st.subheader("Gaphe 3 : Distribution par années de sortie (`histplot`)")
 
 nb_bins = st.number_input("Faites varier le nombre de bins", min_value=20, value=50, max_value=100)
 
-with st.expander("Découvrez le code") : 
+with st.expander("Découvrir le code") : 
     with st.echo() :
         fig, ax = plt.subplots()
 
@@ -326,31 +312,34 @@ with st.expander("Découvrez le code") :
 st.pyplot(fig)
 
 st.markdown("""
-L'histogramme `histplot` montre la distribution des contenus Netflix en fonction de leur année de sortie.
+    L'histogramme `histplot` montre la distribution du contenu Netflix en fonction de son année de sortie.
 
-**1. Le Constat : Une forte concentration sur le contenu récent**
+    **1. Le Constat : Une forte concentration de contenu récent**
 
-Le graphique est fortement **asymétrique à gauche** (*left-skewed*). On observe deux choses :
-* **Le Pic :** La grande majorité des films et séries disponibles ont été produits au cours des 5 à 10 dernières années, avec un pic très net sur les années les plus récentes (ex: 2017-2021).  
-* **La Traîne :** Une longue "traîne" s'étend vers la gauche, indiquant que, bien que des contenus plus anciens (des années 80, 90 ou 2000) soient présents, ils sont beaucoup moins nombreux.  
+    Le graphique présente une **asymétrie à gauche** (*left-skewed*) très prononcée. On observe deux phénomènes :
 
-**2. L'Analyse : Une stratégie axée sur la "fraîcheur"**
+    * **Le Pic :** La grande majorité des films et séries disponibles ont été produits au cours des 5 à 10 dernières années, avec un pic très net sur la période la plus récente (par ex., 2017-2021).
+    * **La Traîne :** Une longue "traîne" s'étire vers la gauche, indiquant que, bien que des contenus plus anciens (des années 80, 90 ou 2000) soient présents, ils sont beaucoup moins nombreux.
 
-Cette distribution n'est pas un hasard, elle reflète directement la stratégie commerciale de Netflix :
+    **2. L'Analyse : Une stratégie axée sur la "fraîcheur"**
 
-* **Focus sur la Nouveauté :** L'argument marketing principal de Netflix est le contenu "frais", nouveau et original. C'est essentiel pour acquérir de nouveaux abonnés et retenir les clients existants.  
-* **L'Ère du Streaming :** L'augmentation exponentielle des titres récents coïncide avec l'investissement massif de Netflix dans la production de contenu original (à partir de 2015-2016) pour concurrencer les studios traditionnels.  
-* **Gestion des Licences :** Le contenu plus ancien est souvent acquis via des licences temporaires et coûteuses. Netflix préfère investir dans des contenus qu'il possède (les "Originals").  
+    Cette distribution n'est pas un hasard ; elle reflète directement la stratégie commerciale de Netflix :
 
-**Conclusion :** Ce graphique illustre que le modèle économique de Netflix est basé sur un renouvellement constant, se positionnant comme une plateforme de nouveautés plutôt que comme une archive du cinéma.
+    * **Focus sur la Nouveauté :** L'argument marketing principal de Netflix repose sur le contenu "frais", nouveau et original. C'est un levier essentiel pour acquérir de nouveaux abonnés et retenir les clients existants.
+    * **L'Ère du Streaming :** L'augmentation exponentielle du nombre de titres récents coïncide avec l'investissement massif de Netflix dans la production de contenu original (à partir de 2015-2016) pour concurrencer les studios traditionnels.
+    * **Gestion des Licences :** Le contenu plus ancien est souvent acquis via des licences temporaires et coûteuses. Netflix préfère de loin investir dans des contenus qu'il possède (les "Originals").
+
+    **Conclusion**
+
+    Ce graphique illustre parfaitement que le modèle économique de Netflix est basé sur un renouvellement constant, positionnant la plateforme comme une source de **nouveautés** plutôt que comme une **archive** du cinéma.
 """)
 
 # Quatrième Graphe : heatmap() ==============================================
 st.write("")
 st.write("")
-st.subheader("Gaphe 4 : Matrice de corrélation avec un heatmap")
+st.subheader("Gaphe 4 : Matrice de corrélation (`heatmap`)")
 
-with st.expander("Découvrez le code") : 
+with st.expander("Découvrir le code") : 
     with st.echo() :
         fig, ax = plt.subplots()
 
@@ -405,9 +394,9 @@ st.markdown("""
 # Cinquième Graphe : boxplot() ==============================================
 st.write("")
 st.write("")
-st.subheader("Gaphe 5 : Durée moyenne selon le type de contenu  avec un boxplot")
+st.subheader("Gaphe 5 : Durée moyenne selon le type de contenu (`boxplot`)")
 
-with st.expander("Découvrez le code") : 
+with st.expander("Découvrir le code") : 
     with st.echo() :
 
         # Graphique 1 : Durée des films
@@ -446,37 +435,36 @@ with col4 :
     st.pyplot(fig2)
 
 st.markdown("""
-    L'analyse de la durée des contenus via des boxplots révèle deux stratégies de catalogue distinctes pour les films et les séries TV.
-    Le boxplot des films montre la répartition de leur durée en minutes.
-            
-    #### 1. Distribution de la Durée des Films
+    L'analyse de la durée des contenus via des diagrammes en boîte (*boxplots*) révèle deux stratégies de catalogue radicalement distinctes pour les films et les séries.
 
-    **Observations (Le Constat) :**
+    #### 1. Distribution de la Durée des Films (en minutes)
 
-    * **Format Standard :** La boîte centrale (l'écart interquartile) montre que 50% des films du catalogue se situent dans le format standard de l'industrie, **autour de 90 à 110 minutes**.
+    **Le Constat (Observations) :**
+
+    * **Format Standard :** La boîte centrale (l'écart interquartile) montre que 50 % des films du catalogue se situent dans le format standard de l'industrie, **autour de 90 à 110 minutes**.
     * **Médiane :** La durée médiane (la plus typique) se trouve également dans cet intervalle.
     * **Outliers (Points Isolés) :** De nombreux points sont visibles en dehors des moustaches, indiquant une grande variété de formats.
 
-    **Interprétation (L'Analyse) :**
+    **L'Analyse (Interprétation) :**
 
     Cette concentration confirme que **Netflix respecte les standards de l'industrie cinématographique**. Les outliers ne sont pas des erreurs mais illustrent la **diversité du catalogue** :
 
-    * **À gauche (> 150 min) :** Présence de films d'auteur, épopées historiques ou versions longues (ex: *The Irishman*).
-    * **À droite (< 60 min) :** Présence de documentaires courts, comédies spéciales (stand-up) et programmes jeunesse.
+    * **À gauche (< 60 min) :** Présence de formats courts : documentaires, comédies spéciales (stand-up) et programmes jeunesse.
+    * **À droite (> 150 min) :** Présence de formats longs : films d'auteur, épopées historiques ou versions longues (ex: *The Irishman*).
 
-    Pour les films, Netflix agit donc en **distributeur classique**, couvrant le format standard tout en assurant la diversité avec des formats de niche.
+    **Conclusion :** Pour les films, Netflix agit en **distributeur classique**, couvrant le format standard tout en assurant la diversité avec des formats de niche.
 
     #### 2. Distribution du Nombre de Saisons (Séries TV)
 
-    Le boxplot des séries TV est l'indicateur le plus révélateur de la stratégie de production.
+    Ce graphique est l'indicateur le plus révélateur de la stratégie de production de Netflix.
 
-    **Observations (Le Constat) :**
+    **Le Constat (Observations) :**
 
-    * **Forte Asymétrie :** Le graphique est extrêmement asymétrique, écrasé vers la gauche.
-    * **Médiane à 1 Saison :** Le point crucial est la **médiane située à 1**. Cela signifie que **50% de toutes les séries du catalogue n'ont jamais dépassé leur première saison**.
-    * **Outliers Rares :** Les séries à succès (4, 5, 10 saisons ou plus) sont si rares qu'elles apparaissent toutes comme des points isolés (outliers).
+    * **Forte Asymétrie :** Le graphique est extrêmement asymétrique, "écrasé" vers la gauche.
+    * **Médiane à 1 Saison :** Le point crucial est que **la médiane est située à 1**. Cela signifie que **plus de 50 % de toutes les séries du catalogue n'ont jamais dépassé leur première saison**.
+    * **Outliers Rares :** Les séries à succès (4, 5, 10 saisons ou plus) sont si peu nombreuses qu'elles apparaissent toutes comme des points isolés (outliers).
 
-    **Interprétation (L'Analyse) :**
+    **L'Analyse (Interprétation) :**
 
     Cet enseignement est majeur : le catalogue de séries est dominé par des **mini-séries** ou des **séries annulées prématurément**.
 
@@ -484,14 +472,14 @@ st.markdown("""
     2.  **La Montée des Mini-séries :** Ce chiffre s'explique aussi par la popularité croissante des "Limited Series" (ex: *Le Jeu de la Dame*), un format narratif complet, moins risqué et moins coûteux qu'une série sur plusieurs années.
     3.  **Les "Hits" sont l'Exception :** Le modèle économique est clair : lancer un grand nombre de séries pour en trouver quelques-unes (les outliers) qui deviendront des succès mondiaux (ex: *Stranger Things*, *The Crown*).
 
-    Pour les séries, Netflix agit donc en **investisseur à haut risque** : il finance un grand nombre de "pilotes" (Saison 1), accepte qu'une majorité échoue (médiane à 1), afin de trouver les quelques "hits" qui fidéliseront les abonnés.
-
+    **Conclusion :** Pour les séries, Netflix agit en **investisseur à haut risque**. Il finance un grand nombre de "pilotes" (Saison 1), accepte qu'une majorité échoue (médiane à 1), afin de trouver les quelques "hits" qui fidéliseront les abonnés.
 """)
 
 # ===============================================================================================================
 # Questions analyses Netflix
 st.write("")
 st.write("")
+st.header("Analyse supplémentaire")
 st.subheader("Domination géographique") # =====================================
 st.markdown("""
     **Question** :  Quels pays dominent la production
@@ -501,7 +489,7 @@ st.markdown("""
     global.
 """)
 
-with st.expander("Découvrez le code") : 
+with st.expander("Découvrir le code") : 
     with st.echo() : 
         # Domination géographique
         nbr_total_production = netflix['show_id'].count()
@@ -511,11 +499,11 @@ nb_repartition_prod = st.number_input("Decouvrez la contribution d'autres pays",
 st.dataframe(repartition_prod_pay_sorted.head(nb_repartition_prod))
 
 st.markdown("""
-L'analyse de cette répartition met en lumière trois points majeurs :
+    L'analyse de cette répartition met en lumière trois points majeurs :
 
-* **Hégémonie Américaine :** Les **États-Unis** ne sont pas seulement en tête, ils dominent de manière écrasante. Avec plus d'un tiers (**36,5 %**) du catalogue total, leur production représente plus que les 9 autres pays du top 10 réunis.  
-* **Les Puissances Secondaires :** L'**Inde** (grâce à Bollywood) et le **Royaume-Uni** (forte industrie télévisuelle) se distinguent clairement comme les deux autres piliers de production, bien que loin derrière les États-Unis.  
-* **La Longue Traîne :** On observe un **fossé important** après le trio de tête. La contribution des autres pays chute rapidement (passant de 7,1 % pour le Royaume-Uni à seulement 3 % pour le Canada). Cela montre que si le catalogue est international, il est en réalité fortement concentré sur quelques acteurs majeurs.
+    * **Hégémonie Américaine :** Les **États-Unis** ne sont pas seulement en tête, ils dominent de manière écrasante. Avec plus d'un tiers (**36,5 %**) du catalogue total, leur production représente plus que les 9 autres pays du top 10 réunis.  
+    * **Les Puissances Secondaires :** L'**Inde** (grâce à Bollywood) et le **Royaume-Uni** (forte industrie télévisuelle) se distinguent clairement comme les deux autres piliers de production, bien que loin derrière les États-Unis.  
+    * **La Longue Traîne :** On observe un **fossé important** après le trio de tête. La contribution des autres pays chute rapidement (passant de 7,1 % pour le Royaume-Uni à seulement 3 % pour le Canada). Cela montre que si le catalogue est international, il est en réalité fortement concentré sur quelques acteurs majeurs.
 """)
 
 

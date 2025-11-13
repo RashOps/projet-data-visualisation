@@ -1,7 +1,26 @@
+"""
+Page "Processus" : Visualisation Plotly (World Happiness Report).
+
+Ce script correspond à la page "5_📊_Partie 2 - Visualisation avec Plotly"
+de l'application. Son objectif est de documenter le processus
+d'analyse et de visualisation (statique), conformément au
+cahier des charges.
+
+Il contient :
+1.  Le chargement du dataset harmonisé (`world_happiness_..._combined.csv`).
+2.  La définition de la charte graphique Plotly (`GLOBAL_TEMPLATE_LAYOUT`).
+3.  La création de chaque graphique Plotly (choropleth, scatter, line, imshow).
+4.  L'analyse textuelle et l'interprétation détaillée sous chaque graphique.
+
+Cette page est distincte du "Dashboard" (6_📝), qui lui est
+un outil d'exploration interactif et dynamique.
+"""
+
 # Imporation des dépendances
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+from utils.chart_styles import get_happiness_layout
 
 # Configuration de la page principale
 st.set_page_config(
@@ -23,98 +42,42 @@ st.subheader("Dataframe : World Happiness Report")
 st.dataframe(world_happiness_report)
 
 # ===========================================================================================
-# DÉFINITION DE LA CHARTE GRAPHIQUE PLOTLY
-
-# 1. Palettes de couleurs
-CONTINUOUS_PALETTE = 'Viridis' # Pour les scores (PIB, Bonheur...)
-CATEGORICAL_PALETTE = 'Safe' # Pour les catégories (Régions...)
-
-# 2. Template de Layout
-GLOBAL_TEMPLATE_LAYOUT = dict(
-    # Le thème de base (fond blanc, grilles légères)
-    template='plotly_white', 
-    
-    # Définition des polices
-    font=dict(
-        family="Arial, sans-serif",
-        size=12,
-        color="#333333" # Gris très foncé, plus doux que le noir
-    ),
-    
-    # Titre principal
-    title=dict(
-        font=dict(size=20, weight="bold"),
-        x=0.5, # Centrer le titre
-        xanchor='center'
-    ),
-    
-    # Axes X et Y
-    xaxis=dict(
-        title_font=dict(size=14, weight="bold"),
-        tickfont=dict(size=12),
-        gridcolor='#EAEAEA', # Grille très claire
-        zerolinecolor='#DDDDDD' # Ligne du zéro
-    ),
-    yaxis=dict(
-        title_font=dict(size=14, weight="bold"),
-        tickfont=dict(size=12),
-        gridcolor='#EAEAEA',
-    ),
-    
-    # Légende (pour les catégories)
-    legend=dict(
-        orientation='h', # Légende horizontale
-        yanchor='bottom',
-        y=1.02, # Placée juste au-dessus du graphique
-        xanchor='right',
-        x=1,
-        title_text='' # Cacher le titre de la légende (souvent redondant)
-    ),
-    
-    # Interactivité (la partie la plus importante)
-    hovermode='closest', # Montre l'infobulle de l'élément le plus proche
-    
-    # Style de l'infobulle (hover)
-    hoverlabel=dict(
-        bgcolor="black",
-        font_size=12,
-        font_family="Arial, sans-serif"
-    )
-)
+# --- Chargement de la charte graphique ---
+CONTINUOUS_PALETTE, CATEGORICAL_PALETTE, GLOBAL_TEMPLATE_LAYOUT = get_happiness_layout()
 
 st.markdown("""
     #### 🎨 Charte Graphique (Plotly)
 
-Pour garantir la cohérence visuelle de tous les graphiques interactifs (Partie 2), une charte graphique centralisée est définie.
+    Pour garantir la cohérence visuelle de tous les graphiques interactifs (Partie 2), une charte graphique centralisée est définie.
 
-##### 1. Palettes de Couleurs
+    ##### 1. Palettes de Couleurs
 
-Deux types de palettes sont définis pour s'adapter aux différents types de données :
+    Deux types de palettes sont définis pour s'adapter aux différents types de données :
 
-* **Palettes Continues :** Pour les échelles numériques (comme le score de bonheur, le PIB, etc.), la palette **'Viridis'** est utilisée pour sa clarté et sa bonne perception des nuances.
-* **Palettes Catégorielles :** Pour les données discrètes (comme les régions du monde), la palette **'Safe'** est choisie pour ses couleurs distinctes et accessibles.
+    * **Palettes Continues :** Pour les échelles numériques (comme le score de bonheur, le PIB, etc.), la palette **'Viridis'** est utilisée pour sa clarté et sa bonne perception des nuances.
+    * **Palettes Catégorielles :** Pour les données discrètes (comme les régions du monde), la palette **'Safe'** est choisie pour ses couleurs distinctes et accessibles.
 
-##### 2. Thème (Template) Global
+    ##### 2. Thème (Template) Global
 
-Un template de layout (`GLOBAL_TEMPLATE_LAYOUT`) est appliqué à tous les graphiques. Il est basé sur le thème `plotly_white` (fond blanc, grilles légères) et personnalisé comme suit :
+    Un template de layout (`GLOBAL_TEMPLATE_LAYOUT`) est appliqué à tous les graphiques. Il est basé sur le thème `plotly_white` (fond blanc, grilles légères) et personnalisé comme suit :
 
-* **Typographie :**
-    * La police principale pour tous les textes est **"Arial"** (taille 12) en gris foncé (`#333333`), offrant un look moderne et plus doux que le noir pur.
+    * **Typographie :**
+        * La police principale pour tous les textes est **"Arial"** (taille 12) en gris foncé (`#333333`), offrant un look moderne et plus doux que le noir pur.
 
-* **Titre Principal :**
-    * Le titre du graphique est **centré**, en **gras**, et d'une taille de **20pt** pour une hiérarchie claire.
+    * **Titre Principal :**
+        * Le titre du graphique est **centré**, en **gras**, et d'une taille de **20pt** pour une hiérarchie claire.
 
-* **Axes (X et Y) :**
-    * Les titres des axes sont mis en avant en **gras** (taille 14pt).
-    * Les grilles sont rendues très subtiles (couleur `#EAEAEA`) pour ne pas surcharger la visualisation.
+    * **Axes (X et Y) :**
+        * Les titres des axes sont mis en avant en **gras** (taille 14pt).
+        * Les grilles sont rendues très subtiles (couleur `#EAEAEA`) pour ne pas surcharger la visualisation.
 
-* **Légende :**
-    * Elle est placée **horizontalement au-dessus du graphique** (plutôt que sur le côté) pour maximiser l'espace horizontal de la visualisation.
-    * Le titre de la légende est masqué pour éviter les informations redondantes.
+    * **Légende :**
+        * Elle est placée **horizontalement au-dessus du graphique** (plutôt que sur le côté) pour maximiser l'espace horizontal de la visualisation.
+        * Le titre de la légende est masqué pour éviter les informations redondantes.
 
-* **Interactivité (Hover) :**
-    * Le mode `hovermode='closest'` est activé pour que l'infobulle de l'élément le plus proche du curseur s'affiche, facilitant l'exploration.
-    * Les infobulles elles-mêmes ont un fond blanc et une police Arial pour une lisibilité maximale.
+    * **Interactivité (Hover) :**
+        * Le mode `hovermode='closest'` est activé pour que l'infobulle de l'élément le plus proche du curseur s'affiche, facilitant l'exploration.
+        * Les infobulles elles-mêmes ont un fond blanc et une police Arial pour une lisibilité maximale.
 """)
 
 st.info("Charte graphique fait avec Gemini", icon="ℹ️")

@@ -1,3 +1,21 @@
+"""
+Module de Rendu pour le Dashboard "Netflix".
+
+Ce script n'est pas une page autonome, mais un module. Il contient
+la fonction principale `render_netflix_dashboard()` qui est
+appelée par le routeur principal (`6_📝_Dashboard.py`) lorsque
+l'utilisateur sélectionne ce dataset.
+
+Son rôle est de :
+1.  Construire l'intégralité de l'interface du dashboard Netflix.
+2.  Appliquer la charte graphique `Seaborn` (`setup_netflix_theme`).
+3.  Afficher les filtres de la barre latérale (sidebar)
+    spécifiques à ce dataset (ex: sliders, selectbox).
+4.  Calculer et afficher les KPIs (Indicateurs Clés).
+5.  Créer (et mettre en cache) tous les graphiques statiques `Seaborn`
+    (countplot, barplot, heatmap, etc.).
+"""
+
 # Imporation des dépendances
 import streamlit as st
 import matplotlib.pyplot as plt
