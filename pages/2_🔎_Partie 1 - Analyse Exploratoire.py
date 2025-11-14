@@ -46,11 +46,11 @@ st.dataframe(netflix)
 # Analyse exploratoire du dataframe
 st.subheader("Analyse du dataframe")
 st.markdown("""
-La commande `netflix.info()` nous permet de constater que notre dataframe contient plusieurs valeurs **null** (ou `NaN`), ainsi que des données inexploitables en l'état pour notre analyse.
+    La commande `netflix.info()` nous permet de constater que notre dataframe contient plusieurs valeurs **null** (ou `NaN`), ainsi que des données inexploitables en l'état pour notre analyse.
 
-Par exemple, la colonne `date_added` est de type `object` (texte) et non `datetime`, c'est-à-dire un format de date non exploitable directement.
+    Par exemple, la colonne `date_added` est de type `object` (texte) et non `datetime`, c'est-à-dire un format de date non exploitable directement.
 
-De plus, notre dataframe contient des colonnes comme `description` (la description du film), `director` (le réalisateur), `cast` (le casting des acteurs), `title` (le titre) et `rating`. Celles-ci seront peu utiles pour notre analyse et il faudra les éliminer à la fin de notre nettoyage.
+    De plus, notre dataframe contient des colonnes comme `description` (la description du film), `director` (le réalisateur), `cast` (le casting des acteurs), `title` (le titre) et `rating`. Celles-ci seront peu utiles pour notre analyse et il faudra effectuer une sélection à la fin de notre nettoyage.
 """)
 
 
@@ -61,8 +61,8 @@ st.divider()
 st.subheader("Étape 1 : Convertir la date en un format compréhensible par Pandas")
 
 st.markdown("""
-La première étape sera de convertir `date_added` à l'aide du script ci-dessous. Actuellement de type `object` (texte) et mal formatée, 
-nous allons la transformer en un format de date exploitable, c'est-à-dire en `datetime64`.
+    La première étape sera de convertir `date_added` à l'aide du script ci-dessous. Actuellement de type `object` (texte) et mal formatée, 
+    nous allons la transformer en un format de date exploitable, c'est-à-dire en `datetime64`.
 """)
 
 with st.expander("Découvrir le code") : 
@@ -106,7 +106,7 @@ st.divider()
 st.subheader("Étape 2 : Séparer la durée des films de celles des séries pour les rendre compréhensibles et exploitables")
 
 st.markdown("""
-    Cette seconde étape va consister à **séparer** la durée des films de celles des séries, qui se présentent actuellement sous forme d'**`object`** (texte). 
+    Cette seconde étape consistera à **séparer** la durée des films de celles des séries, qui se présentent actuellement sous forme d'**`object`** (texte). 
     Nous allons ensuite les formater correctement, avant de les convertir en valeurs numériques (`float`) afin de les exploiter.
 """)
 
@@ -214,7 +214,7 @@ csv_data = netflix_cleaned.to_csv(index=False)
 
 # Le bouton de téléchargement
 st.download_button(
-    label="Téléchargez le nouveau dataframe nettoyé en CSV",
+    label="Télécharger le nouveau dataframe nettoyé en CSV",
     data=csv_data,
     file_name="netflix_cleaned.csv",
     mime="text/csv",
@@ -222,5 +222,5 @@ st.download_button(
 
 # Passer à la partie création des graphiques aprés l'analyse 
 st.write("")
-st.write("Passez à la visualisation des graphes avec Seaborn en cliquant sur le bouton ci-dessous.")
+st.write("Passer à la visualisation des graphes avec Seaborn en cliquant sur le bouton ci-dessous.")
 st.link_button("Cliquez-ici ", url="/Partie_1_-_Les_graphiques_Seaborn")

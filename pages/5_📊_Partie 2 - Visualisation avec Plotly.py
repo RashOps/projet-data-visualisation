@@ -30,7 +30,7 @@ st.set_page_config(
     initial_sidebar_state = "expanded"
 )
 
-st.sidebar.subheader("Visualisation des grpahes avec Plotly 📊")
+st.sidebar.subheader("Visualisation des graphes avec Plotly 📊")
 
 # Chargement du dataframe
 from data_loader import load_happiness_data_analysis

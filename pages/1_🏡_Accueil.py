@@ -49,7 +49,7 @@ st.divider()
 st.header("🚀 Le Produit Fini : Dashboard Interactif")
 st.markdown(
 """
-C'est la pièce maîtresse du projet. Un dashboard interactif complet qui combine les deux datasets en un seul outil d'exploration.
+C'est la pièce maîtresse du projet. Un dashboard intéractif complet qui combine les deux datasets en un seul outil d'exploration.
 
 * **Sidebar Dynamique :** Les filtres s'adaptent au dataset que vous choisissez.
 * **KPIs en Temps Réel :** Les chiffres clés se mettent à jour avec vos sélections.

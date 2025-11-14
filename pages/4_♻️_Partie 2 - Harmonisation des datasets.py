@@ -361,7 +361,7 @@ st.dataframe(df_final)
 
 # Création de colonnes
 st.write("")
-st.markdown("""Téléchargez le nouveau dataframe et passez à la visualisation avec Plotly""")
+st.markdown("""Télécharger le nouveau dataframe et passer à la visualisation avec Plotly""")
 col_next1, col_next2 = st.columns(2)
 
 # Telechargement du fichier harmonisé
@@ -374,7 +374,7 @@ csv_data = convert_df_to_csv(df_final)
 
 with col_next1 : 
     st.download_button(
-        label="Téléchargez le nouveau DataFrame en CSV",
+        label="Télécharger le nouveau DataFrame en CSV",
         data="csv_data",
         file_name="world_happiness_2015-2019_combined.csv",
         mime="text/csv",

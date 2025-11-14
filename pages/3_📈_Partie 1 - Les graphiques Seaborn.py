@@ -36,7 +36,6 @@ st.set_page_config(
 st.sidebar.subheader("Visualisation des graphiques Seaborn 📈")
 
 # ===========================================================================================================================
-st.title("Création des graphiques avec Seaborn")
 
 # =============================================================================================================================
 
@@ -59,13 +58,16 @@ st.markdown("""
 from data_loader import load_netflix_data_analysis
 netflix = load_netflix_data_analysis()
 
+st.title("Création des graphiques avec Seaborn")
+st.subheader("Dataframe : Netflix")
+
 st.dataframe(netflix)
 
 # ===========================================================================================================================
 # Analyse descriptive
 st.divider()
 st.write("")
-st.subheader("Pré-analyse : analyse descriptive")
+st.subheader("Analyse descriptive préliminaire")
 
 st.markdown("""
     Dans cette analyse, nous verrons :
@@ -91,7 +93,7 @@ with st.expander("Découvrir le code") :
         repartition_prod_year_sorted = repartition_prod_year.sort_values(by=['show_id'], ascending=False)
 
 # Nombres Séries VS Films
-text = f"On observe ainsi : **{nbre_production_par_type['Movie']} films** et **{nbre_production_par_type['TV Show']} series**, sur **{nbre_production_total} productions totales**."
+text = f"Nous observons ainsi : **{nbre_production_par_type['Movie']} films** et **{nbre_production_par_type['TV Show']} series**, sur **{nbre_production_total} productions totales**."
 st.info(text, icon="✨")
 
 # Création des colonnes
@@ -118,9 +120,9 @@ with col2 :
     st.markdown("#### Répartition du contenus par années de production")
     nb_years = st.number_input("Entrez un nombre pour voir la liste de la repartition des titres par année.", min_value=5, max_value=99)
     st.markdown("""
-    Entrez un nombre pour voir le classement des années basé sur la **répartition du contenu**.
+        Entrez un nombre pour voir le classement des années basé sur la **répartition du contenu**.
 
-    Entrez **99** pour voir l'entièreté du classement.""")
+        Entrez **99** pour voir l'entièreté du classement.""")
     if nb_pays == 99 : 
         st.dataframe(repartition_prod_year_sorted)
     else :
@@ -195,7 +197,7 @@ main_palette, binary_palette, heatmap_cmap, LIGHT_GREY, DARK_GREY, NETFLIX_BLACK
 # ==========================================================================================================================
 # Premier graphe : countplot() ======================================================
 st.divider()
-st.subheader("Gaphe 1 : Comparaison films VS séries avec un (`countplot`)")
+st.subheader("Gaphe 1 : Comparaison films VS séries (`countplot`)")
 
 with st.expander("Découvrir le code") : 
     with st.echo() : 
@@ -237,7 +239,7 @@ st.markdown("""
 # Deuxieme Graphe : barplot() ==============================================
 st.write("")
 st.write("")
-st.subheader("Gaphe 2 : Top 10 des pays producteurs avec (`barplot`)")
+st.subheader("Gaphe 2 : Top 10 des pays producteurs (`barplot`)")
 
 nb_top10_countries = st.number_input("Entrez un nombre pour modifier le graphe", min_value=5, value=10, max_value=15)
 
@@ -482,11 +484,8 @@ st.write("")
 st.header("Analyse supplémentaire")
 st.subheader("Domination géographique") # =====================================
 st.markdown("""
-    **Question** :  Quels pays dominent la production
-    Netflix ? Identifier les principaux
-    producteurs de contenu et leur
-    contribution relative au catalogue
-    global.
+    **Question** :  Quels pays dominent la production Netflix ? 
+    Identifier les principaux producteurs de contenu et leur contribution relative au catalogue global.
 """)
 
 with st.expander("Découvrir le code") : 
@@ -495,7 +494,7 @@ with st.expander("Découvrir le code") :
         nbr_total_production = netflix['show_id'].count()
         repartition_prod_pay_sorted['contribution_pays_%'] = repartition_prod_pay_sorted['show_id'] * 100 / nbr_total_production
     
-nb_repartition_prod = st.number_input("Decouvrez la contribution d'autres pays", min_value=5, value=10, max_value=99)   
+nb_repartition_prod = st.number_input("Découvrez la contribution d'autres pays", min_value=5, value=10, max_value=99)   
 st.dataframe(repartition_prod_pay_sorted.head(nb_repartition_prod))
 
 st.markdown("""
