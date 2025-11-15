@@ -37,7 +37,7 @@ st.set_page_config(
 st.sidebar.subheader("Visualisation des graphiques Seaborn 📈")
 
 # ===========================================================================================================================
-# Titre principal corrigé
+# Titre principal
 st.title("Création des graphiques avec Seaborn")
 
 # =============================================================================================================================

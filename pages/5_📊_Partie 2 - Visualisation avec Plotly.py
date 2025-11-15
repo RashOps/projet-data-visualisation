@@ -54,6 +54,16 @@ if world_happiness_report is None:
 # ===========================================================================================
 st.title("Visualisation Plotly et Analyse descriptive")
 
+# =============================================================================================================================
+
+st.info("""
+    **Note** : Si vous n'avez pas encore vu les étapes de l'harmonisation des datasets originaux, cliquez sur le lien ci-dessous pour y accéder.""", 
+    icon="💡")
+
+st.link_button("Analyse exploratoire et nettoyage", url="/Partie_2_-_Harmonisation_des_datasets")
+
+# =============================================================================================================================
+
 with st.expander("Afficher le DataFrame harmonisé complet (782 lignes)"):
     st.dataframe(world_happiness_report)
 
@@ -174,7 +184,7 @@ with st.expander("🔍 Lire l'analyse"):
 st.divider() 
 st.markdown("""##### Évolution temporelle de pays clés""")
 
-# line() : evolution temporelle
+# line() : évolution temporelle
 with st.expander("Découvrir le code"):
     with st.echo():
         countries_to_plot = [
