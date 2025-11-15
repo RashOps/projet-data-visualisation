@@ -1,0 +1,26 @@
+# Configuration globale de l'application Streamlit
+
+[theme]
+# Définition du mode sombre par défaut
+base = "dark"
+
+# Couleurs widgets
+primaryColor = "#E50914"
+
+# Autres paramètres
+backgroundColor = "#0E1117"
+secondaryBackgroundColor = "#1C1E2A"
+textColor = "#FFFFFF"
+
+[server]
+# Ne pas ouvrir de navigateur automatiquement au lancement
+headless = true
+port = 8501
+
+[client]
+# En mode développement, voir toutes les erreurs
+showErrorDetails = true
+
+[browser]
+# Ne pas envoyer de statistiques d'utilisation
+gatherUsageStats = false
