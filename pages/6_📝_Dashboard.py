@@ -57,4 +57,4 @@ if world_happiness_report is None:
 if dataframe == "Netflix":
     render_netflix_dashboard(netflix)
 else:
-    render_happiness_dashboard(world_happiness_report)
+    render_happiness_dashboard(world_happiness_report) 

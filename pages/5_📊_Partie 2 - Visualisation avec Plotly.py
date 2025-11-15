@@ -365,7 +365,7 @@ with st.expander("🔍 Lire l'analyse"):
         **Conclusion** : Le bonheur n'est pas une question d'argent uniquement. C'est un équilibre presque égal entre la richesse (PIB), la santé (Espérance de vie) et la communauté (Soutien social).
     """)
 
-st.write("")
+st.write("") 
 st.write("")
 st.divider() # =============================================================
 st.subheader("Analyse finale : World Happiness")

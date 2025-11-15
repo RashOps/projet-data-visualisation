@@ -3,7 +3,7 @@ Page d'Accueil et Sommaire de l'Application (1_🏡_Accueil.py).
 
 Ce script est la page d'atterrissage (landing page) principale
 de l'application.
-
+ 
 Son rôle est de :
 1.  **Décrire** le projet : présenter le cahier des charges,
     les datasets (Netflix, World Happiness) et les objectifs.

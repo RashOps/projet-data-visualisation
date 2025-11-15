@@ -363,7 +363,7 @@ def render_happiness_dashboard(world_happiness_df):
             * **La "Race" :** Le `yaxis_categoryorder='total ascending'` (le code qui fait la "race") montre qu'il est très difficile d'entrer dans ce Top 10, et tout aussi difficile d'en sortir. C'est la visualisation d'une **stabilité structurelle** (économies solides, systèmes de santé robustes, confiance élevée).""")
 
     with col_top_flop_2:
-        st.plotly_chart(fig_flop, use_container_width=True)
+        st.plotly_chart(fig_flop, use_container_width=True) 
         with st.expander("🔍 Lire l'analyse du Flop 10"):
             st.markdown("""
             ### 📉 Analyse : Le "Bar Chart Race" du Flop 10

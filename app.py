@@ -13,7 +13,7 @@ Son unique rôle est de :
 
 Pour démarrer l'application, c'est CE fichier qu'il faut exécuter :
 streamlit run app.py
-"""
+""" 
 
 import streamlit as st
 

@@ -6,7 +6,7 @@ de l'application. Son objectif est de documenter le processus
 d'analyse exploratoire (EDA) et de nettoyage des données brutes,
 conformément au cahier des charges de la Partie 1.
 
-Il contient :
+Il contient : 
 1.  Le chargement du dataset original (`netflix_titles.csv`).
 2.  L'analyse descriptive des problèmes (valeurs nulles, types
     de données incorrects, colonnes inutiles).

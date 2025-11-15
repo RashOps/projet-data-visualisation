@@ -309,7 +309,7 @@ col_next1, col_next2 = st.columns(2)
 def convert_df_to_csv(df):
     return df.to_csv(index=False).encode('utf-8')
 
-csv_data = convert_df_to_csv(df_final)
+csv_data = convert_df_to_csv(df_final) 
 
 
 with col_next1 :

@@ -429,7 +429,7 @@ st.markdown("""
 
 
 st.write("")
-st.write("")
+st.write("") 
 st.subheader("Comparaison durée") # =====================================
 st.markdown("""
     **Question** : Les films sont-ils en moyenne plus longs que les séries ? 

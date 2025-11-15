@@ -21,7 +21,7 @@ Il fournit des fonctions "setup" distinctes pour :
 """
 
 import seaborn as sns
-import streamlit as st
+import streamlit as st 
 import plotly.express as px
 
 # Charte graphique Netflix

@@ -13,4 +13,4 @@ def get_extremes_by_year(df, variable_col, ascending=False, n=10):
         """
         return (df.groupby('Year')
                 .apply(lambda x: x.sort_values(variable_col, ascending=ascending).head(n))
-                .reset_index(drop=True))
+                .reset_index(drop=True)) 
