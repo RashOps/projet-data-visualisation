@@ -6,7 +6,7 @@
 [![Plotly](https://img.shields.io/badge/Plotly-5.15%2B-blue?logo=plotly)](https://plotly.com/)
 [![Seaborn](https://img.shields.io/badge/Seaborn-0.12%2B-darkblue?logo=seaborn)](https://seaborn.pydata.org/)
 
-**[ 🔴 (Bientôt) Voir l'application déployée ici ]**
+**[🚀 Voir l'application déployée ici !](https://mon-projet-dataviz.streamlit.app/)**
 
 Ce projet est une application web de data visualisation complète, construite avec **Streamlit**, qui répond à un cahier des charges académique précis. Il démontre une maîtrise de l'ensemble du pipeline de data analyse : du nettoyage (Data Cleaning) et de l'analyse exploratoire (EDA) à la création de visualisations statiques (`Seaborn`) et de dashboards interactifs (`Plotly`).
 
