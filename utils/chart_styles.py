@@ -27,6 +27,21 @@ import plotly.express as px
 # Charte graphique Netflix
 @st.cache_resource
 def setup_netflix_theme():
+    """
+    Applique le thème Seaborn global pour Netflix et met en cache les ressources.
+    
+    Cette fonction exécute `sns.set_theme()` (une opération de setup)
+    et la met en cache avec @st.cache_resource pour n'être exécutée
+    qu'une seule fois.
+
+    Elle retourne les palettes et couleurs nécessaires pour les pages :
+    - `dashboards/netflix_page.py`
+    - `pages/3_📈_Partie 1 - Les graphiques Seaborn.py`
+
+    Returns:
+        tuple: Un tuple contenant les palettes et couleurs principales
+               (main_palette, binary_palette, heatmap_cmap, ...)
+    """
     # =============================================================================
     # --- CHARTE GRAPHIQUE ---
 
@@ -37,7 +52,7 @@ def setup_netflix_theme():
     LIGHT_GREY = "#B3B3B3"
     DARK_GREY = "#4D4D4D"
 
-    # Palette pour les graphiques simples (ex: top 10)
+    # Palette pour les graphiques simples 
     # Un dégradé de gris vers le rouge
     main_palette = sns.color_palette([LIGHT_GREY, DARK_GREY, NETFLIX_BLACK, NETFLIX_RED])
 
@@ -50,10 +65,10 @@ def setup_netflix_theme():
     # Palette pour les heatmaps (de blanc vers rouge)
     heatmap_cmap = sns.light_palette(NETFLIX_RED, as_cmap=True)
 
-    # 2. Définir le style global (Polices et Fond)
+    # 2. Définir le style global
     sns.set_theme(
-        style="whitegrid",  # Fond blanc avec des grilles légères
-        font="Arial",       # Police propre et lisible (si installée, sinon "sans-serif")
+        style="whitegrid",  
+        font="Arial",       
         rc={
             # Police et couleur pour les titres
             "axes.titlecolor": NETFLIX_BLACK,
@@ -76,6 +91,20 @@ def setup_netflix_theme():
 
 # Charte graphique World Happiness Report
 def get_happiness_layout() :
+    """
+    Définit et retourne la charte graphique pour Plotly.
+    
+    Cette fonction ne nécessite pas de cache car elle ne fait que
+    définir un dictionnaire, ce qui est une opération instantanée.
+
+    Elle retourne les palettes et le template layout nécessaires pour les pages :
+    - `dashboards/happiness_page.py`
+    - `pages/5_📊_Partie 2 - Visualisation avec Plotly.py`
+    
+    Returns:
+        tuple: Un tuple contenant les palettes et le template
+               (CONTINUOUS_PALETTE, CATEGORICAL_PALETTE, GLOBAL_TEMPLATE_LAYOUT)
+    """
     # DÉFINITION DE LA CHARTE GRAPHIQUE PLOTLY
 
     # 1. Palettes de couleurs
@@ -114,22 +143,22 @@ def get_happiness_layout() :
             gridcolor='#EAEAEA',
         ),
         
-        # Légende (pour les catégories)
+        # Légende
         legend=dict(
             orientation='h', # Légende horizontale
             yanchor='bottom',
             y=1.02, # Placée juste au-dessus du graphique
             xanchor='right',
             x=1,
-            title_text='' # Cacher le titre de la légende (souvent redondant)
+            title_text='' # Cacher le titre de la légende
         ),
         
-        # Interactivité (la partie la plus importante)
+        # Interactivité
         hovermode='closest', # Montre l'infobulle de l'élément le plus proche
         
-        # Style de l'infobulle (hover)
+        # Style de l'infobulle
         hoverlabel=dict(
-            bgcolor="black",
+            bgcolor="black", # Fond noir pour l'infobulle
             font_size=12,
             font_family="Arial, sans-serif"
         )

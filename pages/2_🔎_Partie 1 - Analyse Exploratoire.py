@@ -19,10 +19,11 @@ Cette page est le "making-of" qui prépare les données pour la page
 de visualisation suivante : "3_📈_Visualisation Seaborn".
 """
 
-# Imporation des dépendances
+# Importation des dépendances
 import pandas as pd
 import streamlit as st
 import numpy as np
+from data_loader import load_netflix_data_cleaning 
 
 # Configuration de la page principale
 st.set_page_config(
@@ -32,16 +33,23 @@ st.set_page_config(
     initial_sidebar_state = "expanded"
 )
 
-st.sidebar.subheader("Analyse Exporatoire & Cleaning 🔎")
+# Faute d'orthographe
+st.sidebar.subheader("Analyse Exploratoire & Cleaning 🔎")
 
 # Titre de la page
-st.title("Analayse exploratoire et nettoyage du dataset")
+st.title("Analyse exploratoire et nettoyage du dataset")
 
 # Visualisation du dataset original
-# Chargmenet du dataframe
-from data_loader import load_netflix_data_cleaning
+st.subheader("Chargement du DataFrame Brut")
+
+# Gestion d'erreur critique 
 netflix = load_netflix_data_cleaning()
-st.dataframe(netflix)
+
+if netflix is None:
+    st.error("Échec du chargement du fichier 'netflix_titles.csv'. Vérifiez le dossier '/data'.")
+    st.stop() 
+
+st.dataframe(netflix, use_container_width=True)
 
 # Analyse exploratoire du dataframe
 st.subheader("Analyse du dataframe")
@@ -50,7 +58,7 @@ st.markdown("""
 
     Par exemple, la colonne `date_added` est de type `object` (texte) et non `datetime`, c'est-à-dire un format de date non exploitable directement.
 
-    De plus, notre dataframe contient des colonnes comme `description` (la description du film), `director` (le réalisateur), `cast` (le casting des acteurs), `title` (le titre) et `rating`. Celles-ci seront peu utiles pour notre analyse et il faudra effectuer une sélection à la fin de notre nettoyage.
+    De plus, notre dataframe contient des colonnes comme `description`, `director`, `cast`, et `rating`. Celles-ci seront peu utiles pour notre analyse et **ne seront pas incluses** dans notre sélection de colonnes finale.
 """)
 
 
@@ -65,120 +73,112 @@ st.markdown("""
     nous allons la transformer en un format de date exploitable, c'est-à-dire en `datetime64`.
 """)
 
-with st.expander("Découvrir le code") : 
+with st.expander("Découvrir le code"):
     with st.echo():
-        # Imporation des dépendances
-        import pandas as pd
-        
         # Conversion de 'date_added' (objet) en 'date_added_feature' (datetime)
-        netflix['date_added_feature'] = netflix['date_added'].str.strip() # Suppression des espaces blancs en debut et en fin
+        # .str.strip() supprime les espaces blancs en début et en fin
+        netflix['date_added_feature'] = netflix['date_added'].str.strip()
         netflix['date_added_feature'] = pd.to_datetime(netflix['date_added_feature'], errors='coerce')
 
-        # création de la colonne 'year_added' à partir de 'date_added_feature' : Extraction de l'année d'ajout 
+        # création de la colonne 'year_added' : Extraction de l'année
         netflix['year_added'] = netflix['date_added_feature'].dt.year
 
-        # création de la colonne 'month_added' à partir de 'date_added_feature' : Extraction du mois d'ajout 
+        # création de la colonne 'month_added' : Extraction du mois
         netflix['month_added'] = netflix['date_added_feature'].dt.month
 
-        # création de la colonne 'added_day_of_week' à partir de 'date_added_feature' : Extraction du jour d'ajout 
-        netflix['added_day_of_week'] = netflix['date_added_feature'].dt.day
+        # création de la colonne 'added_day_of_week' : Extraction du jour d'ajout
+        netflix['added_day_of_month'] = netflix['date_added_feature'].dt.day
 
-        # Création de la colonne 'lag_time' : qui est la durée entre l'ajout sur netflix et la sortie
+        # Création de la colonne 'lag_time' : durée entre l'ajout et la sortie
         netflix['lag_time'] = netflix['year_added'] - netflix['release_year']
 
-st.dataframe(netflix.head())
+st.dataframe(netflix.head(), use_container_width=True)
 
 st.markdown("""
-    En effectuant ce bloc de script, on **obtient** 5 nouvelles colonnes utilisables et compréhensibles par Pandas :
+    En effectuant ce bloc de script, on **obtient** 5 nouvelles colonnes exploitables :
 
-    * `date_added_feature` : La date correctement formatée et compréhensible par Pandas.
-    * `year_added` : L'année d'ajout sur la plateforme Netflix.
-    * `month_added` : Le mois d'ajout sur la plateforme Netflix.
-    * `day_added` : Le jour d'ajout sur la plateforme Netflix.
-    * `lag_time` : Le délai entre la sortie du film et son ajout sur Netflix.
-            
-    Ces nouvelles colonnes nous seront utiles pour la réalisation de graphiques et d'analyses, contrairement à la colonne de base qui était mal formatée et inexploitable.
+    * `date_added_feature` : La date correctement formatée.
+    * `year_added` : L'année d'ajout sur Netflix.
+    * `month_added` : Le mois d'ajout sur Netflix.
+    * `added_day_of_month` : Le jour du mois de l'ajout (ex: 25).
+    * `lag_time` : Le délai (en années) entre la sortie du film et son ajout.
 """)
 
 # =====================================================================================================================
 st.write("")
 st.divider()
-st.subheader("Étape 2 : Séparer la durée des films de celles des séries pour les rendre compréhensibles et exploitables")
+st.subheader("Étape 2 : Séparer la durée des films de celles des séries")
 
 st.markdown("""
-    Cette seconde étape consistera à **séparer** la durée des films de celles des séries, qui se présentent actuellement sous forme d'**`object`** (texte). 
-    Nous allons ensuite les formater correctement, avant de les convertir en valeurs numériques (`float`) afin de les exploiter.
+    Cette seconde étape consistera à **séparer** la durée des films (ex: "90 min") de celles des séries (ex: "2 Seasons"), qui sont mélangées dans la colonne `duration`.
+    Nous allons les formater et les convertir en valeurs numériques (`float`).
 """)
 
-with st.expander("Découvrir le code") : 
-    with st.echo() :
+with st.expander("Découvrir le code"):
+    with st.echo():
         # Initialisation des colonnes à remplir
-        netflix['duration_min'] = np.nan # permet de créer une colonne pour la durée des film
-        netflix['duration_seasons'] = np.nan # permet de créer une colonne pour le nombre de saison des séries
+        netflix['duration_min'] = np.nan # Colonne pour la durée des films
+        netflix['duration_seasons'] = np.nan # Colonne pour le nombre de saisons
 
-        # Création des masques servant a departager les films et series
-        mask_films = ((netflix['type']=='Movie') & (netflix['duration'].notna())) # Masque pour les films
-        mask_series = ((netflix['type']=='TV Show') & (netflix['duration'].notna())) # Masque pour les séries
+        # Création des masques pour séparer Films et Séries
+        mask_films = (netflix['type'] == 'Movie') & (netflix['duration'].notna())
+        mask_series = (netflix['type'] == 'TV Show') & (netflix['duration'].notna())
 
-        # Application des masques et séparation des films et series
+        # Application des masques et séparation
         # Durée des films
-        netflix.loc[mask_films, 'duration_min'] = netflix.loc[mask_films, 'duration'] # Application du masque film sur la colonne et extraction de la duree des film
-        netflix['duration_min'] = netflix['duration_min'].str.replace(' min', '').astype(float) # Conversion de la duree qui en 'str' en 'float'
+        netflix.loc[mask_films, 'duration_min'] = netflix.loc[mask_films, 'duration'].str.replace(' min', '').astype(float)
 
         # Durée des séries
-        netflix.loc[mask_series, 'duration_seasons'] = netflix.loc[mask_series, 'duration'] # Application du masque series sur la colonne et extraction de la duree des series
-        netflix['duration_seasons'] = netflix['duration_seasons'].str.replace(' Seasons', '').str.replace(' Season', '').astype(float) # Conversion de la duree qui en 'str' en 'float'
+        netflix.loc[mask_series, 'duration_seasons'] = netflix.loc[mask_series, 'duration'].str.replace(' Seasons', '').str.replace(' Season', '').astype(float)
 
-st.dataframe(netflix.head())
+st.dataframe(netflix.head(), use_container_width=True)
 
 st.markdown("""
-    À l'aide du script précédent, on obtient deux nouvelles colonnes utilisables et compréhensibles par Pandas :
-
-    * `duration_min` : qui correspond **uniquement** à la durée des films (en minutes).
-    * `duration_seasons` : qui fait référence **uniquement** au nombre de saisons pour les séries.
+    À l'aide du script précédent, on obtient two nouvelles colonnes numériques :
+    * `duration_min` : Contient la durée **uniquement** pour les films.
+    * `duration_seasons` : Contient le nombre de saisons **uniquement** pour les séries.
 """)
 
 
 # =====================================================================================================================
 st.write("")
 st.divider()
-st.subheader("Étape 3 : Extraire le pays de production et le genre principal de chaque film et série")
+st.subheader("Étape 3 : Extraire le pays et le genre principaux")
 
 st.markdown("""
-    Cette étape consistera à extraire le genre principal et le pays de production de chaque film et série, 
-    en partant du principe que le premier élément de chaque cellule est l'élément principal. 
+    Les colonnes `country` et `listed_in` peuvent contenir plusieurs valeurs (ex: "United States, France, Canada").
+    Pour simplifier l'analyse, nous partons du principe que le **premier élément** de la liste est l'élément principal.
 """)
 
-with st.expander("Découvrez le code") :  
-    with st.echo() :
+with st.expander("Découvrir le code"):
+    with st.echo():
         # Pour les pays 
         netflix['main_country'] = netflix['country'].str.split(',').str[0]
 
         # Pour les catégories
         netflix['main_genre'] = netflix['listed_in'].str.split(',').str[0]
 
-st.dataframe(netflix.head())
+st.dataframe(netflix.head(), use_container_width=True)
 
 st.markdown("""
-    Ce script précédent nous permet d'obtenir **deux** nouvelles colonnes utilisables et compréhensibles par Pandas :
-
-    * `main_country` : qui correspond au pays de production du film ou de la série.
-    * `main_genre` : qui fait référence au genre de la série ou du film.
+    Ce script nous permet d'obtenir **deux** nouvelles colonnes exploitables :
+    * `main_country` : Le pays de production principal.
+    * `main_genre` : Le genre principal.
 """)
 
 
 # =====================================================================================================================
 st.write("")
 st.divider()
-st.subheader("Étape 4 : Sélectionner les colonnes exploitables et télécharger un nouveau dataset nettoyé")
+st.subheader("Étape 4 : Sélectionner les colonnes et créer le DataFrame nettoyé")
 
 st.markdown("""
-    À cette étape, notre nettoyage est terminé. Il ne nous reste plus qu'à sélectionner les colonnes qui nous seront utiles et à les sauvegarder dans un nouveau dataset.
+    Notre nettoyage est terminé. Il ne nous reste plus qu'à sélectionner les colonnes qui nous seront utiles pour l'analyse et à créer notre dataset final.
 """)
 
-with st.expander("Découvrir le code") : 
-    with st.echo() :
-        # Ma liste de colonnes final
+with st.expander("Découvrir le code"):
+    with st.echo():
+        # Ma liste de colonnes finales
         columns_final = [
             'show_id', 
             'type', 
@@ -189,7 +189,7 @@ with st.expander("Découvrir le code") :
             'date_added_feature',
             'year_added', 
             'month_added', 
-            'added_day_of_week', 
+            'added_day_of_month', 
             'lag_time', 
             'duration_min', 
             'duration_seasons'
@@ -198,29 +198,41 @@ with st.expander("Découvrir le code") :
         # Nouveau dataframe :
         netflix_cleaned = netflix[columns_final].copy()
 
-st.dataframe(netflix_cleaned.head())
+st.dataframe(netflix_cleaned.head(), use_container_width=True)
 
 st.write("""
     Ainsi, notre travail de data cleaning prend fin.
     Vu la configuration de notre nouveau dataframe, une suppression simple des valeurs nulles nous ferait perdre une grande quantité d'informations, ce qui **biaiserait** nos futures analyses.
 
-    Téléchargez le nouveau dataframe ci-dessous 👇.
+    **Téléchargez** le nouveau dataframe ci-dessous 👇.
 """)
 
 
 # =====================================================================================================================
 # Telecharger notre dataframe en csv
-csv_data = netflix_cleaned.to_csv(index=False) 
+# Optimisation (Mise en cache du 'to_csv')
+@st.cache_data
+def convert_df_to_csv(df):
+    """Convertit un DataFrame en CSV (encodé en UTF-8) en mémoire."""
+    return df.to_csv(index=False).encode('utf-8')
+
+csv_data = convert_df_to_csv(netflix_cleaned)
 
 # Le bouton de téléchargement
 st.download_button(
-    label="Télécharger le nouveau dataframe nettoyé en CSV",
+    label="Télécharger le DataFrame nettoyé (netflix_cleaned.csv)",
     data=csv_data,
     file_name="netflix_cleaned.csv",
     mime="text/csv",
+    use_container_width=True
 )
 
 # Passer à la partie création des graphiques aprés l'analyse 
 st.write("")
-st.write("Passer à la visualisation des graphes avec Seaborn en cliquant sur le bouton ci-dessous.")
-st.link_button("Cliquez-ici ", url="/Partie_1_-_Les_graphiques_Seaborn")
+st.write("Passez à la visualisation des graphiques avec Seaborn en cliquant sur le bouton ci-dessous.")
+
+st.link_button(
+    "Passer à la Visualisation 📈", 
+    url="/Partie_1_-_Les_graphiques_Seaborn",
+    use_container_width=True
+)

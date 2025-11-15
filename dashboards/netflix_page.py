@@ -16,11 +16,137 @@ Son rôle est de :
     (countplot, barplot, heatmap, etc.).
 """
 
-# Imporation des dépendances
+# Importation des dépendances
 import streamlit as st
 import matplotlib.pyplot as plt
-import  seaborn as sns
+import seaborn as sns
+import pandas as pd 
 from utils.chart_styles import setup_netflix_theme
+
+# =============================================================================
+# --- CHARTE GRAPHIQUE ---
+main_palette, binary_palette, heatmap_cmap, LIGHT_GREY, DARK_GREY, NETFLIX_BLACK, NETFLIX_RED = setup_netflix_theme()
+
+# ==========================================================
+# FONCTIONS DE CRÉATION DE GRAPHIQUES (MISES EN CACHE)
+# ==========================================================
+
+@st.cache_data
+def create_countplot_figure(data_df, palette, color):
+    """Crée et retourne la figure Matplotlib pour le countplot."""
+    fig, ax = plt.subplots()
+    sns.countplot(
+        data=data_df,
+        x='type',
+        palette=palette,
+        width=0.75,
+        ax=ax
+    )
+    # Personnalisation
+    ax.set_title('Distribution des Types de Contenu')
+    ax.set_xlabel('Type de Contenu')
+    ax.set_ylabel('Nombre total')
+    
+    for container in ax.containers:
+        ax.bar_label(container, fontsize=12, color=color)
+    return fig
+
+@st.cache_data
+def create_heatmap_figure(data_df):
+    """Crée et retourne la figure Matplotlib pour la heatmap."""
+    fig, ax = plt.subplots(figsize=(10, 8))
+    numeric_cols = ['release_year', 'year_added', 'month_added', 'lag_time', 'duration_min', 'duration_seasons']
+    corr_matrix = data_df[numeric_cols].corr()
+    sns.heatmap(
+        corr_matrix,
+        annot=True, 
+        fmt=".2f",
+        cmap=heatmap_cmap, 
+        linewidths=0.5, 
+        cbar_kws={"label": "Coefficient de Corrélation"},
+        ax=ax
+    )
+    ax.set_title('Matrice de Corrélation')
+    plt.xticks(rotation=45, ha="right")
+    plt.yticks(rotation=0)
+    return fig
+
+@st.cache_data
+def create_boxplot_movies(data_df, color):
+    """Crée et retourne la figure boxplot pour les films."""
+    fig1, ax1 = plt.subplots()
+    sns.boxplot(
+        data=data_df[data_df['type'] == 'Movie'],
+        x='duration_min',
+        color=color,
+        ax=ax1)
+    ax1.set_title('Distribution de la Durée des Films (en minutes)')
+    ax1.set_xlabel('Durée (minutes)')
+    return fig1
+
+@st.cache_data
+def create_boxplot_series(data_df, color) :
+    """Crée et retourne la figure boxplot pour les séries."""
+    fig2, ax2 = plt.subplots()
+    sns.boxplot(
+        data=data_df[data_df['type'] == 'TV Show'].dropna(subset=['duration_seasons']),
+        x='duration_seasons',
+        color=color,
+        ax=ax2)
+    ax2.set_title('Distribution du Nombre de Saisons (Séries TV)')
+    ax2.set_xlabel('Nombre de Saisons')
+    return fig2
+
+@st.cache_data
+def create_barplot_figure(data_df, num_top, color) :
+    """
+    Crée et retourne la figure barplot pour le Top N Pays.
+    """
+    top_data = data_df['main_country'].value_counts().head(num_top).reset_index()
+    top_data.columns = ['country', 'count']
+    
+    fig, ax = plt.subplots(figsize=(10, 8))
+    sns.barplot(
+        data=top_data,
+        x='count',
+        y='country',
+        color=color,  
+        saturation=0.9,    
+        ax=ax
+    )
+    ax.set_title(f'Top {num_top} des Pays Producteurs')
+    ax.set_xlabel('Nombre de Titres')
+    ax.set_ylabel('Pays')
+    sns.despine(left=True, bottom=True)
+    return fig
+
+@st.cache_data
+def create_histplot_figure(data_df, selectbox_year, bins, color, dark_grey_color):
+    """Crée et retourne la figure histplot."""
+    fig, ax = plt.subplots()
+    sns.histplot(
+        data=data_df,
+        x=selectbox_year,
+        bins=bins,           
+        color=color,     
+        kde=True,              
+        line_kws={           
+            'color': dark_grey_color,
+            'linewidth': 3}, 
+        ax=ax)
+    # Personnalisation
+    if selectbox_year == "release_year":
+        ax.set_title('Distribution des années de sortie')
+        ax.set_xlabel('Année de sortie')
+    else:
+        ax.set_title("Distribution des Années d'ajout")
+        ax.set_xlabel("Année d'ajout")
+    ax.set_ylabel('Fréquence')
+    return fig
+
+# ==========================================================
+# FONCTION DE RENDU PRINCIPALE
+# ==========================================================
 
 def render_netflix_dashboard(netflix_df):
     st.header("Dashboard Netflix")
@@ -29,80 +155,68 @@ def render_netflix_dashboard(netflix_df):
     L'objectif est d'identifier la stratégie de contenu de Netflix (Films vs Séries), sa concentration géographique, et l'évolution de son catalogue dans le temps.  
     Les graphiques sont statiques mais sont **régénérés dynamiquement** lorsque vous utilisez les filtres de la barre latérale.
     """)
+    st.divider()
 
     # ===========================================================
-    # Les KPI
-    st.divider()
-    st.sidebar.subheader("Explorez les KPIs")
+    # FILTRES GLOBAUX DE LA SIDEBAR
+    # ===========================================================
+    st.sidebar.subheader("Filtres Netflix")
+    
+    # --- Filtre 1: Type (pour KPIs et graphiques) ---
     selected_type = st.sidebar.selectbox("Type de productions", ["Tous", "Movie", "TV Show"])
+    
+    # --- Filtre 2: Top N (pour Barplot) ---
+    nb_top = st.sidebar.number_input("Nombre de pays (Top N)", min_value=5, value=10, max_value=15)
+
+    # --- Filtres 3 & 4: Histogramme ---
+    list_year = ["release_year", "year_added"]
+    year_selection = st.sidebar.selectbox("Variable pour l'histogramme", list_year)
+    nb_bins = st.sidebar.slider("Nombre de Bins (Histogramme)", min_value=10, value=30, max_value=100)
+
+    # ===========================================================
+    # FILTRAGE DES DONNÉES
+    # ===========================================================
     if selected_type != "Tous":
         df_filtered = netflix_df[netflix_df['type'] == selected_type]
     else:
         df_filtered = netflix_df
 
-    # Section KPIs
+    # ===========================================================
+    # Les KPI
+    # ===========================================================
     st.subheader("Indicateurs Clés")
-
+    
     # Calculs
     total_titles = df_filtered.shape[0]
-    avg_lag_time = int(df_filtered['lag_time'].mean())
-    most_prod_country = df_filtered['main_country'].mode()[0]
+    avg_lag_time = 0
+    if not df_filtered['lag_time'].isnull().all():
+        avg_lag_time = int(df_filtered['lag_time'].mean())
+        
+    most_prod_country = "N/A"
+    if not df_filtered['main_country'].isnull().all():
+        most_prod_country = df_filtered['main_country'].mode()[0]
 
+    # Colonnes des KPIs 
     kpi_col1, kpi_col2, kpi_col3 = st.columns(3, border=True)
-
-    with kpi_col1 :
-        st.metric("Nombre total de titres", total_titles)
-    with kpi_col2 : 
-        st.metric("Délai moyen d'ajout (jours)", f"{avg_lag_time} j")
-    with kpi_col3 :
-        st.metric("Top Pays Producteur", most_prod_country)
-
+    kpi_col1.metric("Nombre total de titres", total_titles)
+    kpi_col2.metric("Délai moyen d'ajout (j)", f"{avg_lag_time} j")
+    kpi_col3.metric("Top Pays Producteur", most_prod_country)
     st.divider()
 
-    # =============================================================================
-    # --- CHARTE GRAPHIQUE ---
-    main_palette, binary_palette, heatmap_cmap, LIGHT_GREY, DARK_GREY, NETFLIX_BLACK, NETFLIX_RED = setup_netflix_theme()
-
     # ===================================================================================
-    # Netflix dataset ===================================================================
-    st.subheader("Graphes Statiques")
+    # Affichage des Graphiques
+    # ===================================================================================
+    st.subheader("Analyses Visuelles")
 
-    graph_stat_col = st.columns(2, gap="medium", vertical_alignment="center", width=1300)
-    # Gaphe 1 : Diagramme ==================================
-    # Création de la fonction
-    @st.cache_data
-    def create_countplot_figure(data_df, palette, color) :
-        fig, ax = plt.subplots()
+    # Création des colonnes
+    col_graph1, col_graph2 = st.columns(2, gap="medium")
 
-        sns.countplot(
-            data=data_df,
-            x='type',
-            palette=palette,
-            width=0.75,
-            ax=ax
-        )
-
-        # Personnalisation
-        ax.set_title('Distribution des Types de Contenu')
-        ax.set_xlabel('Type de Contenu')
-        ax.set_ylabel('Nombre total')
-
-        # Ajout des étiquettes de valeur au-dessus des barres
-        ax.bar_label(ax.containers[0], fontsize=12, color=color)
-        ax.bar_label(ax.containers[1], fontsize=12, color=color)
-
-        # Gérer le cas où il n'y a qu'un seul container (si filtré)
-        for container in ax.containers:
-            ax.bar_label(container, fontsize=12, color=color)
-        return fig
-    
-    # Appel de la fonction
-    fig_countplot = create_countplot_figure(netflix_df, binary_palette, DARK_GREY)
-
-    with graph_stat_col[0] :
-        # Affichage du graphe
+    # Graphe 1 : Countplot
+    with col_graph1:
+        # Appel de la fonction cachée
+        fig_countplot = create_countplot_figure(df_filtered, binary_palette, DARK_GREY)
         st.pyplot(fig_countplot)
-        with st.expander("🔍 Lire l'analyse") :
+        with st.expander("🔍 Lire l'analyse"):
             st.markdown("""
                 ### 📈 Analyse : Répartition Films vs. Séries
 
@@ -118,45 +232,15 @@ def render_netflix_dashboard(netflix_df):
                 * **Coût et Engagement :** Un film est un investissement ponctuel. Une série, en revanche, est un **engagement à long terme** (multiples saisons, coûts de production/licence récurrents).
                 * **Modèles d'Usage :** Les films comblent un besoin (une soirée de 2h), tandis que les séries (les "Originals" en particulier) sont l'outil principal de **rétention** et de "binge-watching" qui crée le buzz.
 
-                **Conclusion :** Le catalogue de Netflix est un équilibre. Il est composé d'une large base de films (le volume pour satisfaire tous les goûts) complétée par des séries à gros budget (la rétention pour fidéliser).
-            """)
+                **Conclusion**  
+                Le catalogue de Netflix est un équilibre. Il est composé d'une large base de films (le volume pour satisfaire tous les goûts) complétée par des séries à gros budget (la rétention pour fidéliser).""")
 
-
-    # Graphe 2 : Heatmap ===================
-    # Création de la fonction
-    @st.cache_data
-    def create_heatmap_figure(data_df) :
-        fig, ax = plt.subplots()
-        numeric_cols = ['release_year', 'year_added', 'month_added', 'lag_time', 'duration_min', 'duration_seasons']
-        corr_matrix = data_df[numeric_cols].corr()
-
-        sns.heatmap(
-            corr_matrix,
-            annot=True,          
-            fmt=".2f",           # Formatage à 2 décimales
-            cmap=heatmap_cmap,   
-            linewidths=0.5,      
-            cbar_kws={           
-                # Personnalisation de la barre de couleur
-                "label": "Coefficient de Corrélation"
-            })
-
-        # Personnalisation
-        ax.set_title('Matrice de Corrélation')
-
-        # Faire pivoter les étiquettes pour la lisibilité
-        plt.xticks(rotation=90) 
-        plt.yticks(rotation=0)
-
-        return fig
-    
-    # Appel de la fonction
-    fig_heatmap = create_heatmap_figure(netflix_df)
-
-    with graph_stat_col[1] :
-        # Affichage du graphe
+    # Graphe 2 : Heatmap
+    with col_graph2:
+        # Appel de la fonction cachée
+        fig_heatmap = create_heatmap_figure(netflix_df)
         st.pyplot(fig_heatmap)
-        with st.expander("🔍 Lire l'analyse") :
+        with st.expander("🔍 Lire l'analyse"):
             st.markdown("""
             ### 📈 Analyse : Matrice de Corrélation
 
@@ -178,63 +262,23 @@ def render_netflix_dashboard(netflix_df):
             * **Absence de Corrélation (`month_added`) :** Le mois d'ajout ne montre aucun lien linéaire avec les autres facteurs, ce qui est attendu.
 
             **Conclusion :**
-            Cette matrice valide la structure de nos données (films vs séries) et, plus important encore, elle fournit une preuve quantitative de l'évolution stratégique de Netflix vers la production et la diffusion immédiate de son propre contenu.
-            """)
+            Cette matrice valide la structure de nos données (films vs séries) et, plus important encore, elle fournit une preuve quantitative de l'évolution stratégique de Netflix vers la production et la diffusion immédiate de son propre contenu.""")
 
-    # Graphe 3 : Boxplot ======================
-    boxplot_col = st.columns(2, gap="medium", vertical_alignment="center", width=1300)
+    st.divider()
 
-
-    # Graphique 1 : Durée des films
-    # Création de la fonction
-    @st.cache_data
-    def create_boxplot_movies(data_df, color) :
-        fig1, ax1 = plt.subplots()
-        sns.boxplot(
-            data=data_df[data_df['type'] == 'Movie'],
-            x='duration_min',
-            color=color,
-            ax=ax1)
-
-        # Personnalisation 
-        ax1.set_title('Distribution de la Durée des Films (en minutes)')
-        ax1.set_xlabel('Durée (minutes)')
-
-        return fig1
+    # Graphe 3 : Boxplots
+    col_box1, col_box2 = st.columns(2, gap="medium")
     
-    # Appel de la fonction
+    # Appel des fonctions cachées
     boxplot_movies = create_boxplot_movies(netflix_df, NETFLIX_RED)
-
-
-    # Graphique 2 : Nombre de Saisons des Séries
-    # Création de la fonction
-    @st.cache_data
-    def create_boxplot_series(data_df, color) :
-        fig2, ax2 = plt.subplots()
-        sns.boxplot(
-            data=data_df[data_df['type'] == 'TV Show'].dropna(subset=['duration_seasons']),
-            x='duration_seasons',
-            color=color,
-            ax=ax2)
-        
-        # Personnalisation 
-        ax2.set_title('Distribution du Nombre de Saisons (Séries TV)')
-        ax2.set_xlabel('Nombre de Saisons')
-
-        return fig2
-
-    # Appel de la fonction
     boxplot_series = create_boxplot_series(netflix_df, DARK_GREY)
 
-    with boxplot_col[0] :
-        # Affichage graphe de la Durée des films
+    with col_box1:
         st.pyplot(boxplot_movies)
-
-    with boxplot_col[1] :
-        # A ffichage graphe de la Durée des séries
+    with col_box2:
         st.pyplot(boxplot_series)
 
-    with st.expander("🔍 Lire l'analyse") :
+    with st.expander("🔍 Lire l'analyse des Boxplots"):
         st.markdown("""
         ### 📈 Analyse Comparée : Durée des Films vs. Séries
 
@@ -265,53 +309,20 @@ def render_netflix_dashboard(netflix_df):
         * **Question :** Les films sont-ils plus longs que les séries ?
         * **Réponse :** Les unités (minutes vs. saisons) sont incomparables. Mais si l'on pose une **hypothèse** (une série médiane = 1 saison de 8 épisodes * 45 min = 360 min), on constate qu'une série est **largement plus longue** qu'un film médian (100 min).
 
-        **Conclusion :** Netflix utilise les **Films** pour le **volume** (satisfaire tous les goûts) et les **Séries** pour la **rétention** (créer des "hits" qui fidélisent les abonnés).
-        """)
-
-    st.write("")
-    st.write("")
+        **Conclusion :** Netflix utilise les **Films** pour le **volume** (satisfaire tous les goûts) et les **Séries** pour la **rétention** (créer des "hits" qui fidélisent les abonnés).""")
+    
     st.divider()
-    st.subheader("Gaphes intéractifs")
+    
+    # Graphe 4 : Barplot & Graphe 5 : Histplot
+    col_bar, col_hist = st.columns(2, gap="medium")
 
-    interactif_graph_col = st.columns(2, gap="medium", vertical_alignment="center", width=1300)
-    # Graphe 4 : Diagramme en barre ============================
-    # Préparation des données (Top 10)
-    st.sidebar.write("")
-    st.sidebar.subheader("Top des pays producteurs")
-    nb_top10_countries = st.sidebar.number_input("Modifiez le nombre de pays", min_value=5, value=10, max_value=15)
-    top_10_countries = netflix_df['main_country'].value_counts().head(nb_top10_countries).reset_index()
-    top_10_countries.columns = ['country', 'count']
-
-    # Création de la fonction
-    @st.cache_data
-    def create_barplot_figure(data_df, color) :
-        fig, ax = plt.subplots()
-        sns.barplot(
-            data=data_df,
-            x='count',
-            y='country',
-            color=color,  
-            saturation=0.9,     
-            ax=ax
-        )
-
-        # Personnalisation 
-        ax.set_title(f'Top {nb_top10_countries} des Pays Producteurs')
-        ax.set_xlabel('Nombre de Titres')
-        ax.set_ylabel('Pays')
-
-        # Cacher les bordures
-        sns.despine(left=True, bottom=True)
-
-        return fig
-
-    # Appel de la fonction
-    barplot_fig =  create_barplot_figure(top_10_countries, NETFLIX_RED)
-
-    with interactif_graph_col[0] :
-        # Affichage du graphique
-        st.pyplot(barplot_fig)
-        with st.expander("🔍 Lire l'analyse") :
+    # Graphe 4 : Barplot
+    with col_bar:
+        st.subheader(f"Top {nb_top} des Pays")
+        # Appel de la fonction caché
+        fig_barplot = create_barplot_figure(df_filtered, nb_top, NETFLIX_RED)
+        st.pyplot(fig_barplot)
+        with st.expander("🔍 Lire l'analyse"):
             st.markdown("""
             ### 📈 Analyse : Domination Géographique
 
@@ -332,53 +343,15 @@ def render_netflix_dashboard(netflix_df):
             * **Héritage d'Hollywood :** Les États-Unis sont les pionniers de l'industrie cinématographique moderne et disposent d'un catalogue historique inégalé.
             * **Origine de Netflix :** Netflix est une entreprise américaine. Son service a d'abord été lancé et optimisé pour son marché domestique.
             * **Force d'Exportation Culturelle :** Le contenu américain (films et séries en langue anglaise) a la plus grande force d'exportation culturelle au monde.
-            """)
+""")
 
-    # Graphe 5 : Histogramme ==================================
-    st.sidebar.write("")
-    st.sidebar.subheader("Distribution des sorties / Ajouts des productions")
-
-    # Widget 1
-    nb_bins = st.sidebar.slider("Faites varier le nombre de bins", min_value=1, value=20, max_value=100)
-    # Widget 2
-    list_year = ["release_year", "year_added"]
-    year_selection = st.sidebar.selectbox("Choisissez la variable", list_year)
-
-    # Création de la fonction
-    @st.cache_data
-    def create_histplot_figure(data_df, selectbox_year, bins, color, dark_grey_color) :
-        fig, ax = plt.subplots()
-        sns.histplot(
-            data=data_df,
-            x=selectbox_year,
-            bins=bins,               
-            color=color,       
-            kde=True,              
-            line_kws={             
-                # Personnalisation de la ligne KDE
-                'color': dark_grey_color,
-                'linewidth': 3}, 
-            ax=ax)
-
-        # Personnalisation
-        if selectbox_year == "release_year" :
-            ax.set_title('Distribution des années de sortie du contenu')
-            ax.set_xlabel('Année de sortie')
-        else :
-            ax.set_title("Distribution des Années d'ajout du contenu")
-            ax.set_xlabel('Année d\'ajout')
-
-        ax.set_ylabel('Fréquence')
-
-        return fig
-
-    # Appel de la fonction
-    histplot_fig = create_histplot_figure(netflix_df, year_selection, nb_bins, NETFLIX_RED, DARK_GREY)
-
-    with interactif_graph_col[1] :
-        # Affichage du graphe
-        st.pyplot(histplot_fig)
-        with st.expander("🔍 Lire l'analyse") :
+    # Graphe 5 : Histplot
+    with col_hist:
+        st.subheader("Distribution Temporelle")
+        # Appel de la fonction cachée
+        fig_hist = create_histplot_figure(df_filtered, year_selection, nb_bins, NETFLIX_RED, DARK_GREY)
+        st.pyplot(fig_hist)
+        with st.expander("🔍 Lire l'analyse"):
             st.markdown("""
             ### 📈 Analyse : Évolution Temporelle du Catalogue
 
@@ -394,5 +367,4 @@ def render_netflix_dashboard(netflix_df):
             * **Le Constat :** Le graphique montre une **croissance exponentielle** des ajouts de contenu, culminant autour de 2018-2019, suivie d'une **baisse notable** en 2020-2021.
             * **L'Analyse :** C'est l'histoire de l'essor du streaming. La baisse de 2020 n'est pas un désintérêt, mais le résultat de deux facteurs majeurs :
             1. **COVID-19 :** L'arrêt brutal de toutes les productions mondiales a tari le "pipeline" de nouveaux contenus.
-            2. **La Concurrence :** L'arrivée de Disney+, HBO Max, etc., a non seulement fragmenté le marché mais a aussi poussé Netflix à pivoter d'une stratégie de "volume" à une stratégie de "qualité" (blockbusters).
-            """)
+            2. **La Concurrence :** L'arrivée de Disney+, HBO Max, etc., a non seulement fragmenté le marché mais a aussi poussé Netflix à pivoter d'une stratégie de "volume" à une stratégie de "qualité" (blockbusters).""")

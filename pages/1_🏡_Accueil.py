@@ -58,12 +58,12 @@ C'est la pièce maîtresse du projet. Un dashboard intéractif complet qui combi
 )
 
 # Mettre le bouton en évidence
-cols_dash = st.columns([1, 2, 1]) # Crée 3 colonnes, [milieu] est 2x plus large
+cols_dash = st.columns([1, 2, 1]) 
 with cols_dash[1]:
     st.link_button(
         "Accéder au Dashboard Interactif 📝", 
-        url="/Dashboard", # L'URL vient du titre de st.Page dans app.py
-        use_container_width=True # Fait un gros bouton
+        url="/Dashboard", 
+        use_container_width=True 
     )
 
 st.divider()
@@ -77,7 +77,7 @@ en montrant le processus de **nettoyage** et de **visualisation** pour chaque da
 """
 )
 
-# Utiliser des onglets (st.tabs) est plus propre
+# Création des onglets avec st.tabs()
 tab1, tab2 = st.tabs(["Partie 1 : Netflix (Seaborn)", "Partie 2 : World Happiness (Plotly)"])
 
 with tab1:
