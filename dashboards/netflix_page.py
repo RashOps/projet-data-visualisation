@@ -220,11 +220,11 @@ def render_netflix_dashboard(netflix_df):
             st.markdown("""
                 ### 📈 Analyse : Répartition Films vs. Séries
 
-                **1. Le Constat (Ce que le graphique montre)**
+                **1. Le Constat**
 
                 Le `countplot` affiche une **nette asymétrie** dans le catalogue : il y a significativement **plus de Films (Movies) que de Séries (TV Shows)**.
 
-                **2. L'Analyse (Pourquoi ?)**
+                **2. L'Analyse**
 
                 Cette distribution n'est pas un hasard, elle est le reflet direct de la stratégie commerciale de Netflix à travers le temps :
 
@@ -328,7 +328,7 @@ def render_netflix_dashboard(netflix_df):
 
             Le `barplot` illustre la répartition géographique des productions de contenu sur Netflix, en se concentrant sur les **N** premiers pays (défini par le widget).
 
-            **1. Le Constat (Ce que le graphique montre)**
+            **1. Le Constat**
 
             Quelle que soit la valeur de N (5, 10 ou 15), le constat est sans appel :
 
@@ -336,7 +336,7 @@ def render_netflix_dashboard(netflix_df):
             * **Les Puissances Secondaires :** L'**Inde** (grâce à Bollywood et à sa large population) et le **Royaume-Uni** (forte industrie télévisuelle) se distinguent clairement comme les deux autres piliers de la production.
             * **La "Longue Traîne" :** On observe un **fossé important** après le trio de tête. La contribution des autres pays chute rapidement, ce qui montre que si le catalogue est "international", il est en réalité fortement concentré sur quelques acteurs majeurs.
 
-            **2. L'Analyse (Pourquoi ?)**
+            **2. L'Analyse**
 
             Cette domination s'explique par une combinaison de facteurs historiques et économiques :
 

@@ -226,7 +226,7 @@ st.markdown("""
     L'objectif était de combiner 5 fichiers CSV distincts (un pour chaque année de 2015 à 2019) en un seul jeu de données cohésif. Une simple concaténation était impossible car les noms de colonnes (le "schéma") différaient d'une année à l'autre. Le processus suivant a été appliqué pour harmoniser et empiler les données sans perte de lignes.
 
     ##### Opération 1 : Définition d'un Schéma Unifié ("Colonnes Clés")
-    Justification : Pour analyser l'évolution d'une métrique (comme le PIB) dans le temps, elle doit exister dans une seule et même colonne. Nous avons donc défini un "noyau commun" de colonnes pertinentes présentes, sous une forme ou une autre, dans tous les fichiers.
+    Pour analyser l'évolution d'une métrique (comme le PIB) dans le temps, elle doit exister dans une seule et même colonne. Nous avons donc défini un "noyau commun" de colonnes pertinentes présentes, sous une forme ou une autre, dans tous les fichiers.
 
     Colonnes Conservées (Schéma Final) :
     Country (Pays)  
@@ -243,7 +243,7 @@ st.markdown("""
     ---        
 
     ##### Opération 2 : Sélection et Renommage (Harmonisation)
-    Justification : Chaque fichier a été chargé individuellement, et ses colonnes ont été renommées pour correspondre à notre schéma unifié. Les colonnes non pertinentes ont été intentionnellement supprimées.
+    Chaque fichier a été chargé individuellement, et ses colonnes ont été renommées pour correspondre à notre schéma unifié. Les colonnes non pertinentes ont été intentionnellement supprimées.
 
     Exemples de Renommage :
 
@@ -262,19 +262,19 @@ st.markdown("""
     * Lower Confidence Interval, Upper Confidence Interval (2016)  
     * Whisker.high, Whisker.low (2017)  
 
-    Justification de la Suppression : Ces colonnes étaient des métadonnées statistiques (comme les marges d'erreur) qui n'étaient pas présentes de manière cohérente dans tous les fichiers. Les conserver aurait créé un DataFrame final avec de nombreuses colonnes vides (NaN), polluant l'analyse temporelle. Nous avons privilégié le "noyau commun" de métriques.
+    Ces colonnes étaient des métadonnées statistiques (comme les marges d'erreur) qui n'étaient pas présentes de manière cohérente dans tous les fichiers. Les conserver aurait créé un DataFrame final avec de nombreuses colonnes vides (NaN), polluant l'analyse temporelle. Nous avons privilégié le "noyau commun" de métriques.
 
     ---        
 
     ##### Opération 3 : Création de la Colonne Year
-    Justification : Pour effectuer une analyse temporelle (comme px.line()), nous avions besoin d'une colonne indiquant l'année de chaque observation.
+    Pour effectuer une analyse temporelle (comme px.line()), nous avions besoin d'une colonne indiquant l'année de chaque observation.
 
     Action : Une colonne Year a été ajoutée à chaque DataFrame avant la fusion (ex: df_2015['Year'] = 2015, df_2016['Year'] = 2016, etc.).
 
     ---        
 
     ##### Opération 4 : Rétro-ingénierie de la Colonne Region
-    Justification : La colonne Region est cruciale pour le regroupement et la coloration des graphiques (ex: color='Region'). Cependant, elle n'était explicitement présente que dans les fichiers de 2015 et 2016.
+    La colonne Region est cruciale pour le regroupement et la coloration des graphiques (ex: color='Region'). Cependant, elle n'était explicitement présente que dans les fichiers de 2015 et 2016.
 
     Action :
 
@@ -286,7 +286,7 @@ st.markdown("""
     ---        
 
     ##### Opération 5 : Concaténation Verticale
-    Justification : Assembler les 5 DataFrames (maintenant propres et harmonisés) en un seul grand DataFrame.  
+    Assembler les 5 DataFrames (maintenant propres et harmonisés) en un seul grand DataFrame.  
     Action : La fonction pd.concat() a été utilisée pour "empiler" verticalement les DataFrames.  
     Résultat : Un DataFrame unique de 782 lignes (158 + 157 + 155 + 156 + 156) et 11 colonnes (les 10 du schéma + Year), ne conservant que les NaN qui existaient dans les données sources ou qui n'ont pas pu être mappés (pour Region). 
     
